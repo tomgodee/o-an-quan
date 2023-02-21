@@ -96,6 +96,7 @@ const Game = () => {
             } else {
               currentCell = currentCells[leftCellIndex];
               leftCellIndex = currentCell.leftCellIndex;
+              console.log("leftCellIndex", leftCellIndex);
             }
           } else if (direction === DIRECTIONS.right) {
             currentCells[rightCellIndex].stones.push(spreadingStone as Stone);
