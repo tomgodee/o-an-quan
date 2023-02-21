@@ -1,5 +1,5 @@
+import { orange } from "@mui/material/colors";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
-import { green, red, orange } from "@mui/material/colors";
 
 declare module "@mui/material/styles" {
   interface Theme {
@@ -14,10 +14,16 @@ declare module "@mui/material/styles" {
     };
   }
   interface Palette {
+    tertiary: Palette["primary"];
+    quaternary: Palette["primary"];
+    quinary: Palette["primary"];
     neutral: Palette["primary"];
   }
 
   interface PaletteOptions {
+    tertiary: PaletteOptions["primary"];
+    quaternary: PaletteOptions["primary"];
+    quinary: PaletteOptions["primary"];
     neutral: PaletteOptions["primary"];
   }
   interface PaletteColor {
@@ -29,11 +35,11 @@ declare module "@mui/material/styles" {
   }
 
   interface TypographyVariants {
-    poster: React.CSSProperties;
+    score: React.CSSProperties;
   }
 
   interface TypographyVariantsOptions {
-    poster?: React.CSSProperties;
+    score?: React.CSSProperties;
   }
 }
 
@@ -45,29 +51,37 @@ declare module "@mui/material/Button" {
 
 declare module "@mui/material/Typography" {
   interface TypographyPropsVariantOverrides {
-    poster: true;
+    score: true;
   }
 }
-
+// ff595e-ffca3a-8ac926-1982c4-6a4c93
 let theme = createTheme({
   typography: {
     fontFamily: ["Nunito", "sans-serif"].join(","),
     // fontSize: 16,
     htmlFontSize: 10,
-    poster: {
-      color: "red",
+    score: {
+      fontSize: "4rem",
     },
   },
   palette: {
     primary: {
-      main: green[600],
+      main: "#8ac926",
     },
     secondary: {
-      main: red[600],
+      main: "#FF595E",
+    },
+    tertiary: {
+      main: "#1982c4",
+    },
+    quaternary: {
+      main: "#FFCA3A",
+    },
+    quinary: {
+      main: "#6a4c93",
     },
     neutral: {
-      main: "#64748B",
-      contrastText: "#fff",
+      main: "#edede9",
     },
   },
   status: {

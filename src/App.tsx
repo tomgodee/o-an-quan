@@ -3,7 +3,10 @@ import "./App.css";
 import { useState } from "react";
 
 import CssBaseline from "@mui/material/CssBaseline";
-import { ThemeProvider } from "@mui/material/styles";
+import {
+  Experimental_CssVarsProvider as CssVarsProvider,
+  ThemeProvider,
+} from "@mui/material/styles";
 
 import reactLogo from "./assets/react.svg";
 import theme from "./theme";
@@ -13,10 +16,12 @@ function App() {
 
   return (
     <>
-      <CssBaseline />
-      <ThemeProvider theme={theme}>
-        <div>This is App</div>
-      </ThemeProvider>
+      <CssVarsProvider>
+        {/* <CssBaseline /> */}
+        <ThemeProvider theme={theme}>
+          <div>This is App</div>
+        </ThemeProvider>
+      </CssVarsProvider>
     </>
   );
 }
