@@ -23,7 +23,7 @@ export interface Cell {
   shouldShowDroppingAnimation: boolean;
 }
 
-export type DirectionType = keyof typeof DIRECTIONS;
+export type DirectionType = typeof DIRECTIONS[keyof typeof DIRECTIONS];
 
 export interface Player {
   stones: Stone[];

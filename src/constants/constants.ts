@@ -1,6 +1,6 @@
 export const DIRECTIONS = {
-  left: "left",
-  right: "right",
+  LEFT: "left",
+  RIGHT: "right",
 } as const;
 
 export const CELL_TYPES = {

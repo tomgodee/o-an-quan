@@ -1,38 +1,19 @@
 import "./style.css";
 
-import stoneIcon from "assets/stone.png";
-import { animate, motion, Variants } from "framer-motion";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { animate } from "framer-motion";
+import { useEffect, useState } from "react";
 
 import { Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
-import {
-  CELL_TYPES,
-  DIRECTIONS,
-  STONE_TYPES,
-  STONE_VALUES,
-} from "../../../../constants/constants";
-import { useBreakPoints } from "../../../../customHooks/useBreakPoints";
-import { getCellValue, getPebbleImage } from "../../../../utils";
+import { STONE_TYPES } from "../../../../constants/constants";
 import Box from "../FramerMotion/Box";
-import { PlayerBox as PlayerBoxContainer } from "./styles";
 
-import type {
-  Cell,
-  Stone,
-  DirectionType,
-  Player,
-} from "../../../../types/types";
-// import { PlayerBox as PlayerBoxComponent } from "./styles";
+import type { Stone, Player } from "../../../../types/types";
 
 interface PlayerBoxProps {
   player: Player;
   enabled: boolean;
-  // cell: Cell;
-  // direction: DirectionType;
-  // isSelected: boolean;
-  // handleClickDirectionButton: (cell: Cell, direction: DirectionType) => void;
 }
 
 const isImperialStone = (stone: Stone) => stone.type === STONE_TYPES.IMPERIAL;

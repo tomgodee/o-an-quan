@@ -1,24 +1,19 @@
-import { motion, Variants } from "framer-motion";
+import { Variants } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  CELL_TYPES,
-  DIRECTIONS,
-  STONE_TYPES,
-  STONE_VALUES,
-} from "../../../../constants/constants";
-import { faHand, faHandBackFist } from "@fortawesome/free-regular-svg-icons";
+
+import { faHand } from "@fortawesome/free-regular-svg-icons";
 import { faCircleLeft, faCircleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTheme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 
+import { DIRECTIONS } from "../../../../constants/constants";
 import { useBreakPoints } from "../../../../customHooks/useBreakPoints";
+import { getCellValue, getPebbleImage } from "../../../../utils";
 import Box from "../../components/FramerMotion/Box";
 import { VillagerCell as VillagerCellComponent } from "./styles";
 
-import { getCellValue, getPebbleImage } from "../../../../utils";
 import type { Cell, DirectionType } from "../../../../types/types";
-import Typography from "@mui/material/Typography";
-
 interface VillagerCellProps {
   reversed?: boolean;
   cell: Cell;
@@ -75,8 +70,8 @@ function VillagerCell(props: VillagerCellProps) {
 
       setClickedCell(null);
 
-      setIsLeftButtonClicked(direction === DIRECTIONS.left);
-      setIsRightButtonClicked(direction === DIRECTIONS.left);
+      setIsLeftButtonClicked(direction === DIRECTIONS.LEFT);
+      setIsRightButtonClicked(direction === DIRECTIONS.LEFT);
 
       handleClickDirectionButton(cell, direction);
     }
@@ -278,9 +273,9 @@ function VillagerCell(props: VillagerCellProps) {
 
   const getHandInitial = () => {
     if (cell.shouldShowDroppingAnimation) {
-      if (direction === DIRECTIONS.left) {
+      if (direction === DIRECTIONS.LEFT) {
         return "droppingStoneHandLeftInitial";
-      } else if (direction === DIRECTIONS.right) {
+      } else if (direction === DIRECTIONS.RIGHT) {
         return "droppingStoneHandRightInitial";
       }
     } else if (isSelected) return "gettingStonesHandInitial";
@@ -290,15 +285,15 @@ function VillagerCell(props: VillagerCellProps) {
 
   const getHandAnimate = () => {
     if (cell.shouldShowDroppingAnimation) {
-      if (direction === DIRECTIONS.left) {
+      if (direction === DIRECTIONS.LEFT) {
         return "droppingStoneHandLeftAnimate";
-      } else if (direction === DIRECTIONS.right) {
+      } else if (direction === DIRECTIONS.RIGHT) {
         return "droppingStoneHandRightAnimate";
       }
     } else if (isSelected) {
-      if (direction === DIRECTIONS.left) {
+      if (direction === DIRECTIONS.LEFT) {
         return "gettingStonesHandLeftAnimate";
-      } else if (direction === DIRECTIONS.right) {
+      } else if (direction === DIRECTIONS.RIGHT) {
         return "gettingStonesHandRightAnimate";
       }
     }
@@ -468,7 +463,7 @@ function VillagerCell(props: VillagerCellProps) {
           transition: "background-position 0.25s",
           zIndex: 1,
         }}
-        onClick={(event) => handleClickDirectionButtons(event, DIRECTIONS.left)}
+        onClick={(event) => handleClickDirectionButtons(event, DIRECTIONS.LEFT)}
       >
         <FontAwesomeIcon icon={faCircleLeft} size="2x" />
       </Box>
@@ -503,7 +498,7 @@ function VillagerCell(props: VillagerCellProps) {
           zIndex: 100,
         }}
         onClick={(event) =>
-          handleClickDirectionButtons(event, DIRECTIONS.right)
+          handleClickDirectionButtons(event, DIRECTIONS.RIGHT)
         }
       >
         <FontAwesomeIcon icon={faCircleRight} size="2x" />

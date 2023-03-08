@@ -1,30 +1,17 @@
-import { motion, Variants } from "framer-motion";
-import { useEffect, useMemo, useRef, useState } from "react";
-
-import { faHand, faHandBackFist } from "@fortawesome/free-regular-svg-icons";
-import { faCircleLeft, faCircleRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Typography from "@mui/material/Typography";
 import stoneIcon from "assets/stone.png";
-import {
-  CELL_TYPES,
-  DIRECTIONS,
-  STONE_TYPES,
-  STONE_VALUES,
-} from "../../../../constants/constants";
-import { useBreakPoints } from "../../../../customHooks/useBreakPoints";
+
+import Typography from "@mui/material/Typography";
+
+import { STONE_TYPES } from "../../../../constants/constants";
 import { Stone } from "../../../../types/types";
 import { getCellValue, getPebbleImage } from "../../../../utils";
 import Box from "../FramerMotion/Box";
 import { ImperialCell as ImperialCellComponent } from "./styles";
 
-import type { Cell, DirectionType } from "../../../../types/types";
+import type { Cell } from "../../../../types/types";
 interface ImperialCellProps {
   reversed?: boolean;
   cell: Cell;
-  // direction: DirectionType;
-  // isSelected: boolean;
-  // handleClickDirectionButton: (cell: Cell, direction: DirectionType) => void;
 }
 
 const isImperialStone = (stone: Stone) => stone.type === STONE_TYPES.IMPERIAL;

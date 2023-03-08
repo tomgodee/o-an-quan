@@ -1,4 +1,4 @@
-import type { Cell } from "../types/types";
+import type { Cell, Stone } from "../types/types";
 
 import pebble_1 from "assets/pebble_1.png";
 import pebble_2 from "assets/pebble_2.png";
@@ -25,7 +25,12 @@ export const getPebbleImage = (stoneId: number) => {
   return pebble_1;
 };
 
+export const sortStonesByType = (stoneA: Stone, stoneB: Stone) => {
+  return -stoneA.type.localeCompare(stoneB.type);
+};
+
 export default {
   getCellValue,
   getPebbleImage,
+  sortStonesByType,
 };

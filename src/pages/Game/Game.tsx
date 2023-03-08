@@ -2,37 +2,25 @@ import { useEffect, useState } from "react";
 
 import Box from "@mui/material/Box";
 
-import {
-  CELL_TYPES,
-  DIRECTIONS,
-  STONE_TYPES,
-  STONE_VALUES,
-} from "../../constants/constants";
+import { CELL_TYPES, DIRECTIONS, STONE_TYPES } from "../../constants/constants";
+import { sortStonesByType } from "../../utils";
 import ImperialCell from "./components/ImperialCell";
 import PlayerBox from "./components/PlayerBox";
 import VillagerCell from "./components/VillagerCell";
+import { createImperialStones, createVillagerStones } from "./database";
 
 import type { Cell, Stone, DirectionType, Player } from "../../types/types";
-
-const imperialStone: Stone = {
-  id: 0,
-  type: STONE_TYPES.IMPERIAL,
-  value: STONE_VALUES.IMPERIAL,
-  top: 0,
-  left: 0,
-  rotate: 0,
-};
 
 const Game = () => {
   const [cells, setCells] = useState<Cell[]>([]);
   const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
   const [clickedCell, setClickedCell] = useState<Cell | null>(null);
-  const [lastTouchedCell, setLastTouchedCell] = useState<Cell | null>(
+  const [winningCell, setWinningCell] = useState<Cell>({} as Cell);
+  const [lastTouchedCell, setLastTouchedCell] = useState<Cell>({} as Cell);
+  const [lastTouchedVillagerCell, setLastTouchedVillagerCell] = useState<Cell>(
     {} as Cell
   );
-  const [lastTouchedVillagerCell, setLastTouchedVillagerCell] =
-    useState<Cell | null>({} as Cell);
-  const [direction, setDirection] = useState<DirectionType>(DIRECTIONS.left);
+  const [direction, setDirection] = useState<DirectionType>(DIRECTIONS.LEFT);
   const [playerOne, setPlayerOne] = useState<Player>({
     stones: [],
   });
@@ -40,101 +28,14 @@ const Game = () => {
     stones: [],
   });
   const [isPlayerOneTurn, setIsPlayerOneTurn] = useState(true);
-  const [isGameRunning, setIsGameRunning] = useState(false);
-
-  const endTurn = () => {
-    setIsPlayerOneTurn((prevState) => !prevState);
-    setIsGameRunning(false);
-    setSelectedCell(null);
-    setLastTouchedCell(null);
-    setLastTouchedVillagerCell(null);
-    setCells((cells) =>
-      cells.map((cell) => {
-        cell.shouldShowDroppingAnimation = false;
-        return cell;
-      })
-    );
-  };
-
-  const handleClickDirectionButton = (cell: Cell, direction: DirectionType) => {
-    setIsGameRunning(true);
-    setSelectedCell(cell);
-    setDirection(direction);
-    // setCells((cells) => {
-
-    // })
-
-    let currentCell = { ...cell };
-    const initialCellIndex = currentCell.id;
-    const spreadingStones = [...currentCell.stones];
-    let { leftCellIndex, rightCellIndex } = currentCell;
-
-    for (let i = 0; i < spreadingStones.length; i += 1) {
-      setTimeout(() => {
-        // if it's the last stone then save the last touched villager cell b4 changing the current cell
-        if (
-          i === spreadingStones.length - 1 &&
-          currentCell.type === CELL_TYPES.VILLAGER
-        ) {
-          setLastTouchedVillagerCell(currentCell);
-        }
-
-        setCells((cells) => {
-          let currentCells = cells.map((cell) => {
-            cell.shouldShowDroppingAnimation = false;
-            return cell;
-          });
-          const spreadingStone = currentCells[initialCellIndex].stones.shift();
-
-          if (direction === DIRECTIONS.left) {
-            currentCells[leftCellIndex].stones.push(spreadingStone as Stone);
-            currentCells[leftCellIndex].shouldShowDroppingAnimation = true;
-            if (leftCellIndex === 0) {
-              direction = DIRECTIONS.right;
-              rightCellIndex = currentCell.id === 1 ? 6 : 1;
-              currentCell = currentCells[leftCellIndex];
-            } else {
-              currentCell = currentCells[leftCellIndex];
-              leftCellIndex = currentCell.leftCellIndex;
-            }
-          } else if (direction === DIRECTIONS.right) {
-            currentCells[rightCellIndex].stones.push(spreadingStone as Stone);
-            currentCells[rightCellIndex].shouldShowDroppingAnimation = true;
-            if (rightCellIndex === 11) {
-              direction = DIRECTIONS.left;
-              leftCellIndex = currentCell.id === 5 ? 10 : 5;
-              currentCell = currentCells[rightCellIndex];
-            } else {
-              currentCell = currentCells[rightCellIndex];
-              rightCellIndex = currentCell.rightCellIndex;
-            }
-          }
-
-          setDirection(direction);
-
-          setLastTouchedCell(currentCell);
-          if (currentCell.type === CELL_TYPES.VILLAGER) {
-            setLastTouchedVillagerCell(currentCell);
-          }
-
-          return currentCells;
-        });
-      }, (i + 1) * 1000);
-    }
-  };
+  const [isSpreadingStones, setIsSpreadingStones] = useState(false);
+  const [shouldTriggerNextAction, setShouldTriggerNextAction] = useState(false);
+  const [isGameStarted, setIsGameStarted] = useState(false);
+  const [numberOfWinningChain, setNumberOfWinningChain] = useState(0);
 
   const initGame = () => {
-    const villagerStones: Stone[] = [];
-    for (let i = 1; i <= 50; i += 1) {
-      villagerStones.push({
-        id: i,
-        type: STONE_TYPES.VILLAGER,
-        value: STONE_VALUES.VILLAGER,
-        top: Math.floor(Math.random() * 65),
-        left: Math.floor(Math.random() * 75),
-        rotate: Math.floor(Math.random() * 360),
-      });
-    }
+    const villagerStones = createVillagerStones();
+    const imperialStones = createImperialStones();
 
     const cells = [];
     for (let i = 1; i <= 10; i += 1) {
@@ -152,7 +53,7 @@ const Game = () => {
       {
         id: 0,
         type: CELL_TYPES.IMPERIAL,
-        stones: [{ ...imperialStone, id: 0 }],
+        stones: [imperialStones[0]],
         leftCellIndex: 6,
         rightCellIndex: 1,
         shouldShowDroppingAnimation: false,
@@ -161,7 +62,7 @@ const Game = () => {
       {
         id: 11,
         type: CELL_TYPES.IMPERIAL,
-        stones: [{ ...imperialStone, id: 11 }],
+        stones: [imperialStones[1]],
         leftCellIndex: 5,
         rightCellIndex: 10,
         shouldShowDroppingAnimation: false,
@@ -169,91 +70,302 @@ const Game = () => {
     ]);
   };
 
+  const checkIfCellsHaveStones = () => {
+    const checkedCells = isPlayerOneTurn
+      ? cells.slice(6, 11)
+      : cells.slice(1, 6);
+    return checkedCells.some((cell) => cell.stones.length > 0);
+  };
+
+  const reseedStones = (seedingStones: Stone[]) => {
+    setCells((cells) => {
+      return cells.map((cell) => {
+        if (
+          (isPlayerOneTurn && cell.id >= 6 && cell.id <= 10) ||
+          (!isPlayerOneTurn && cell.id >= 1 && cell.id <= 5)
+        ) {
+          const stone = seedingStones.shift();
+          cell.stones.push(stone as Stone);
+        }
+        return cell;
+      });
+    });
+
+    if (isPlayerOneTurn) {
+      setPlayerOne((player) => ({
+        ...player,
+        stones: player.stones.slice(5),
+      }));
+    } else {
+      setPlayerTwo((player) => ({
+        ...player,
+        stones: player.stones.slice(5),
+      }));
+    }
+  };
+
+  const endTurn = () => {
+    setIsPlayerOneTurn((prevState) => !prevState);
+    setIsSpreadingStones(false);
+    setShouldTriggerNextAction(false);
+    setSelectedCell(null);
+    setLastTouchedCell({} as Cell);
+    setLastTouchedVillagerCell({} as Cell);
+    setNumberOfWinningChain(0);
+    setCells((cells) =>
+      cells.map((cell) => {
+        cell.shouldShowDroppingAnimation = false;
+        return cell;
+      })
+    );
+  };
+
+  const endGame = () => {
+    setIsGameStarted(false);
+    alert("the game has ended!!!");
+  };
+
+  const spreadStones = (cell: Cell, direction: DirectionType) => {
+    setIsGameStarted(true);
+    setIsSpreadingStones(true);
+    setSelectedCell(cell);
+    setDirection(direction);
+
+    let currentCell = { ...cell };
+    const spreadingStones = [...currentCell.stones];
+    let { leftCellIndex, rightCellIndex } = currentCell;
+
+    setShouldTriggerNextAction(false);
+    setCells((cells) =>
+      cells.map((cell) => {
+        if (cell.id === currentCell.id) {
+          cell.stones = [];
+        }
+        return cell;
+      })
+    );
+
+    const numberOfLoops = spreadingStones.length;
+    for (let i = 0; i < numberOfLoops; i += 1) {
+      setTimeout(() => {
+        const isLastLoop = i === numberOfLoops - 1;
+        // if it's the last stone then save the last touched villager cell b4 changing the current cell
+        if (isLastLoop && currentCell.type === CELL_TYPES.VILLAGER) {
+          setLastTouchedVillagerCell(currentCell);
+        }
+
+        setCells((cells) => {
+          let currentCells = cells.map((cell) => {
+            cell.shouldShowDroppingAnimation = false;
+            return cell;
+          });
+          const spreadingStone = spreadingStones.shift();
+
+          if (direction === DIRECTIONS.LEFT) {
+            currentCells[leftCellIndex].stones.push(spreadingStone as Stone);
+            currentCells[leftCellIndex].shouldShowDroppingAnimation = true;
+            if (leftCellIndex === 0) {
+              direction = DIRECTIONS.RIGHT;
+              rightCellIndex = currentCell.id === 1 ? 6 : 1;
+              currentCell = currentCells[leftCellIndex];
+            } else {
+              currentCell = currentCells[leftCellIndex];
+              leftCellIndex = currentCell.leftCellIndex;
+            }
+          } else if (direction === DIRECTIONS.RIGHT) {
+            currentCells[rightCellIndex].stones.push(spreadingStone as Stone);
+            currentCells[rightCellIndex].shouldShowDroppingAnimation = true;
+            if (rightCellIndex === 11) {
+              direction = DIRECTIONS.LEFT;
+              leftCellIndex = currentCell.id === 5 ? 10 : 5;
+              currentCell = currentCells[rightCellIndex];
+            } else {
+              currentCell = currentCells[rightCellIndex];
+              rightCellIndex = currentCell.rightCellIndex;
+            }
+          }
+
+          setDirection(direction);
+
+          setLastTouchedCell(currentCell);
+          if (currentCell.type === CELL_TYPES.VILLAGER) {
+            setLastTouchedVillagerCell(currentCell);
+          }
+
+          if (isLastLoop) {
+            setShouldTriggerNextAction(true);
+          }
+
+          return currentCells;
+        });
+      }, (i + 1) * 200);
+    }
+  };
+
+  const collectWinningStones = (
+    emptyCell: Cell,
+    lastTouchedVillagerCell: Cell
+  ) => {
+    let winningCell =
+      emptyCell.type === CELL_TYPES.VILLAGER
+        ? getNextCellOnMiddleTable(emptyCell)
+        : getNextCellOnEdgeTable(lastTouchedVillagerCell);
+
+    setWinningCell(winningCell);
+    if (winningCell.type === CELL_TYPES.IMPERIAL) {
+      setDirection((prevDirection) =>
+        prevDirection === DIRECTIONS.LEFT ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT
+      );
+    }
+
+    if (winningCell.stones.length > 0) {
+      // collect winning stones
+      setCells((cells) => {
+        const newCells = cells.map((cell) => {
+          if (cell.id === winningCell.id) {
+            const winningStones = [...cell.stones];
+            if (isPlayerOneTurn) {
+              setPlayerOne((player) => ({
+                ...player,
+                stones: player.stones
+                  .concat(winningStones)
+                  .sort(sortStonesByType),
+              }));
+            } else {
+              setPlayerTwo((player) => ({
+                ...player,
+                stones: player.stones
+                  .concat(winningStones)
+                  .sort(sortStonesByType),
+              }));
+            }
+            cell.stones = [];
+          }
+          cell.shouldShowDroppingAnimation = false;
+          return cell;
+        });
+        return newCells;
+      });
+
+      setNumberOfWinningChain((prevState) => prevState + 1);
+    } else {
+      endTurn();
+    }
+  };
+
+  const getNextCellOnMiddleTable = (cell: Cell) => {
+    return direction === DIRECTIONS.LEFT
+      ? cells[cell.leftCellIndex]
+      : cells[cell.rightCellIndex];
+  };
+
+  const getNextCellOnEdgeTable = (lastTouchedVillagerCell: Cell) => {
+    let nextCellId = 0;
+    if (lastTouchedVillagerCell) {
+      if (lastTouchedVillagerCell.id === 1) nextCellId = 6;
+      else if (lastTouchedVillagerCell.id === 5) nextCellId = 10;
+      else if (lastTouchedVillagerCell.id === 6) nextCellId = 1;
+      else if (lastTouchedVillagerCell.id === 10) nextCellId = 5;
+    }
+    return cells[nextCellId];
+  };
+
+  const findNextCell = () => {
+    let nextCell;
+    if (lastTouchedCell) {
+      if (lastTouchedCell.type === CELL_TYPES.IMPERIAL) {
+        nextCell = getNextCellOnEdgeTable(lastTouchedVillagerCell as Cell);
+      } else if (lastTouchedCell.type === CELL_TYPES.VILLAGER) {
+        nextCell = getNextCellOnMiddleTable(lastTouchedCell);
+      }
+    }
+
+    return nextCell;
+  };
+
+  const findNextCellWhenCollecting = (
+    lastTouchedCell: Cell,
+    lastTouchedVillagerCell: Cell
+  ): Cell => {
+    let nextCell = {} as Cell;
+    if (lastTouchedCell.type === CELL_TYPES.IMPERIAL) {
+      if (lastTouchedVillagerCell.id === 2) nextCell = cells[6];
+      else if (lastTouchedVillagerCell.id === 4) nextCell = cells[10];
+      else if (lastTouchedVillagerCell.id === 7) nextCell = cells[1];
+      else if (lastTouchedVillagerCell.id === 9) nextCell = cells[5];
+    } else {
+      nextCell = getNextCellOnMiddleTable(lastTouchedCell);
+    }
+
+    return nextCell;
+  };
+
+  const processNextAction = () => {
+    let nextCell = findNextCell();
+
+    if (nextCell) {
+      // If there's still any stone in the next cell then spread its stones
+      if (nextCell.stones.length > 0) {
+        if (nextCell.type === CELL_TYPES.VILLAGER) {
+          spreadStones(nextCell, direction);
+        } else {
+          endTurn();
+        }
+      } else {
+        // else the player collect stones
+        collectWinningStones(nextCell, lastTouchedVillagerCell as Cell);
+      }
+    }
+  };
+
+  const areImperialCellsEmpty = () => {
+    return [cells[0], cells[11]].every((cell) => cell.stones.length === 0);
+  };
+
   useEffect(() => {
     initGame();
   }, []);
 
   useEffect(() => {
-    if (selectedCell?.stones.length === 0) {
-      let nextCell;
-      let secondInLineCell: Cell;
+    const doCellsHaveStones = checkIfCellsHaveStones();
+    if (isGameStarted && !doCellsHaveStones) {
+      const currentPlayer = isPlayerOneTurn ? playerOne : playerTwo;
+      const playerVillagerStones: Stone[] = currentPlayer.stones.filter(
+        (stone) => stone.type === STONE_TYPES.VILLAGER
+      );
 
-      // Find the next cell after spread all the stones
-      if (lastTouchedCell) {
-        if (direction === DIRECTIONS.left) {
-          if (lastTouchedCell.type === CELL_TYPES.IMPERIAL) {
-            let nextCellId = 0;
-            if (lastTouchedVillagerCell) {
-              if (lastTouchedVillagerCell.id === 1) nextCellId = 6;
-              else if (lastTouchedVillagerCell.id === 6) nextCellId = 1;
-              else if (lastTouchedVillagerCell.id === 5) nextCellId = 10;
-              else if (lastTouchedVillagerCell.id === 10) nextCellId = 5;
-            }
-            nextCell = cells[nextCellId];
-          } else {
-            nextCell = cells[lastTouchedCell.leftCellIndex];
-          }
-        } else {
-          if (lastTouchedCell.type === CELL_TYPES.IMPERIAL) {
-            let nextCellId = 0;
-            if (lastTouchedVillagerCell) {
-              if (lastTouchedVillagerCell.id === 1) nextCellId = 6;
-              else if (lastTouchedVillagerCell.id === 6) nextCellId = 1;
-              else if (lastTouchedVillagerCell.id === 5) nextCellId = 10;
-              else if (lastTouchedVillagerCell.id === 10) nextCellId = 5;
-            }
-            nextCell = cells[nextCellId];
-          } else {
-            nextCell = cells[lastTouchedCell.rightCellIndex];
-          }
-        }
-      }
-
-      // If there's still stone in the next cell
-      // console.log("nextCell", nextCell);
-      if (nextCell) {
-        if (nextCell.stones.length) {
-          if (nextCell.type === CELL_TYPES.VILLAGER) {
-            handleClickDirectionButton(nextCell, direction);
-          } else {
-            endTurn();
-          }
-        } else {
-          // else calculate stones a player wins
-          if (direction === DIRECTIONS.left) {
-            secondInLineCell = cells[nextCell.leftCellIndex];
-          } else {
-            secondInLineCell = cells[nextCell.rightCellIndex];
-          }
-
-          setCells((cells) => {
-            const newCells = cells.map((cell) => {
-              if (cell.id === secondInLineCell.id) {
-                const winningStones = [...cell.stones];
-                if (isPlayerOneTurn) {
-                  setPlayerOne((player) => ({
-                    ...player,
-                    stones: player.stones.concat(winningStones),
-                  }));
-                } else {
-                  setPlayerTwo((player) => ({
-                    ...player,
-                    stones: player.stones.concat(winningStones),
-                  }));
-                }
-                cell.stones = [];
-              }
-              cell.shouldShowDroppingAnimation = false;
-              return cell;
-            });
-            return newCells;
-          });
-
-          endTurn();
-        }
+      if (playerVillagerStones.length < 5 || areImperialCellsEmpty()) {
+        endGame();
+      } else {
+        reseedStones(playerVillagerStones.slice(0, 5));
       }
     }
-  }, [cells]);
+  }, [isPlayerOneTurn]);
+
+  useEffect(() => {
+    if (shouldTriggerNextAction) {
+      processNextAction();
+    }
+  }, [shouldTriggerNextAction]);
+
+  useEffect(() => {
+    if (numberOfWinningChain && winningCell && lastTouchedVillagerCell) {
+      const thirdInLineCell = findNextCellWhenCollecting(
+        winningCell,
+        lastTouchedVillagerCell
+      );
+
+      if (winningCell.type === CELL_TYPES.VILLAGER) {
+        setLastTouchedVillagerCell(winningCell);
+      }
+
+      if (thirdInLineCell.stones.length > 0) {
+        endTurn();
+      } else {
+        collectWinningStones(thirdInLineCell, lastTouchedVillagerCell);
+      }
+    }
+  }, [numberOfWinningChain]);
 
   return (
     <Box
@@ -278,12 +390,12 @@ const Game = () => {
                 cell={cell}
                 reversed={cell.id > 5}
                 direction={direction}
-                handleClickDirectionButton={handleClickDirectionButton}
+                handleClickDirectionButton={spreadStones}
                 isSelected={selectedCell?.id === cell.id}
                 isInteractable={
                   ((isPlayerOneTurn && cell.id > 5 && cell.id <= 10) ||
                     (!isPlayerOneTurn && cell.id <= 5)) &&
-                  !isGameRunning
+                  !isSpreadingStones
                 }
                 isClicked={clickedCell?.id === cell.id}
                 setClickedCell={setClickedCell}
