@@ -9,7 +9,8 @@ import Typography from "@mui/material/Typography";
 
 import { DIRECTIONS } from "../../../../constants/constants";
 import { useBreakPoints } from "../../../../customHooks/useBreakPoints";
-import { getCellValue, getPebbleImage } from "../../../../utils";
+import { getPebbleImage } from "../../../../utils";
+import { calculateStonesValue } from "utils/stone";
 import Box from "../../components/FramerMotion/Box";
 import { VillagerCell as VillagerCellComponent } from "./styles";
 
@@ -430,7 +431,7 @@ function VillagerCell(props: VillagerCellProps) {
         }}
       >
         <Typography fontWeight={700} variant="caption">
-          {getCellValue(cell)}
+          {calculateStonesValue(cell.stones)}
         </Typography>
       </Box>
 

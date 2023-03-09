@@ -1,10 +1,11 @@
 import stoneIcon from "assets/stone.png";
+import { calculateStonesValue } from "utils/stone";
 
 import Typography from "@mui/material/Typography";
 
 import { STONE_TYPES } from "../../../../constants/constants";
 import { Stone } from "../../../../types/types";
-import { getCellValue, getPebbleImage } from "../../../../utils";
+import { getPebbleImage } from "../../../../utils";
 import Box from "../FramerMotion/Box";
 import { ImperialCell as ImperialCellComponent } from "./styles";
 
@@ -53,7 +54,7 @@ const ImperialCell = (props: ImperialCellProps) => {
         left={reversed ? "10px" : ""}
       >
         <Typography fontWeight={700} variant="caption">
-          {getCellValue(cell)}
+          {calculateStonesValue(cell.stones)}
         </Typography>
       </Box>
     </ImperialCellComponent>

@@ -1,4 +1,4 @@
-import type { Cell, Stone } from "../types/types";
+import type { Stone } from "types/types";
 
 import pebble_1 from "assets/pebble_1.png";
 import pebble_2 from "assets/pebble_2.png";
@@ -7,12 +7,6 @@ import pebble_4 from "assets/pebble_4.png";
 import pebble_5 from "assets/pebble_5.png";
 import pebble_6 from "assets/pebble_6.png";
 import pebble_7 from "assets/pebble_7.png";
-
-export const getCellValue = (cell: Cell) => {
-  return cell.stones.reduce((previousValue, currentValue) => {
-    return previousValue + currentValue.value;
-  }, 0);
-};
 
 export const getPebbleImage = (stoneId: number) => {
   if (stoneId % 7 === 1) return pebble_1;
@@ -25,12 +19,6 @@ export const getPebbleImage = (stoneId: number) => {
   return pebble_1;
 };
 
-export const sortStonesByType = (stoneA: Stone, stoneB: Stone) => {
-  return -stoneA.type.localeCompare(stoneB.type);
-};
-
 export default {
-  getCellValue,
   getPebbleImage,
-  sortStonesByType,
 };

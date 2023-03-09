@@ -9,7 +9,7 @@ import {
   STONE_TYPES,
 } from "../../constants/constants";
 import type { Cell, DirectionType, Player, Stone } from "../../types/types";
-import { sortStonesByType } from "../../utils";
+import { sortStonesByType } from "utils/stone";
 import ImperialCell from "./components/ImperialCell";
 import PlayerBox from "./components/PlayerBox";
 import VillagerCell from "./components/VillagerCell";
@@ -488,7 +488,7 @@ const Game = () => {
         end game
       </button>
 
-      <EndGameModal open={isEndGameModalOpen} />
+      <EndGameModal open={isEndGameModalOpen} player={playerOne} />
     </Box>
   );
 };

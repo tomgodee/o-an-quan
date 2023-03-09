@@ -18,7 +18,17 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
-    "paths": { "assets/*": ["./src/assets/*"] }
+    "paths": {
+      "assets/*": ["./src/assets/*"],
+      "constants/*": ["./src/constants/*"],
+      "components/*": ["./src/components/*"],
+      "customHooks/*": ["./src/customHooks/*"],
+      "pages/*": ["./src/pages/*"],
+      "routes/*": ["./src/routes/*"],
+      "theme/*": ["./src/theme/*"],
+      "types/*": ["./src/types/*"],
+      "utils/*": ["./src/utils/*"]
+    }
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
