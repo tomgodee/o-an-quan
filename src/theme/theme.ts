@@ -36,32 +36,46 @@ declare module "@mui/material/styles" {
 
   interface TypographyVariants {
     score: React.CSSProperties;
+    dialogBodyTitle: React.CSSProperties;
+    dialogBodyText: React.CSSProperties;
   }
 
   interface TypographyVariantsOptions {
     score?: React.CSSProperties;
+    dialogBodyTitle?: React.CSSProperties;
+    dialogBodyText?: React.CSSProperties;
   }
 }
 
 declare module "@mui/material/Button" {
   interface ButtonPropsColorOverrides {
     neutral: true;
+    tertiary: true;
+    quaternary: true;
+    quinary: true;
   }
 }
 
 declare module "@mui/material/Typography" {
   interface TypographyPropsVariantOverrides {
     score: true;
+    dialogBodyTitle: true;
+    dialogBodyText: true;
   }
 }
 // ff595e-ffca3a-8ac926-1982c4-6a4c93
 let theme = createTheme({
   typography: {
     fontFamily: ["Nunito", "sans-serif"].join(","),
-    // fontSize: 16,
     htmlFontSize: 10,
     score: {
       fontSize: "4rem",
+    },
+    dialogBodyTitle: {
+      fontSize: "3.2rem",
+    },
+    dialogBodyText: {
+      fontSize: "2.8rem",
     },
   },
   palette: {

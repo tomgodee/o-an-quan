@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
-import { STONE_TYPES } from "../../../../constants/constants";
+import { SCORE_ANIMATION_DURATION_S } from "../../../../constants/constants";
 import Box from "../FramerMotion/Box";
 
 import type { Stone, Player } from "../../../../types/types";
@@ -15,8 +15,6 @@ interface PlayerBoxProps {
   player: Player;
   enabled: boolean;
 }
-
-const isImperialStone = (stone: Stone) => stone.type === STONE_TYPES.IMPERIAL;
 
 const getStonesValue = (stones: Stone[]) => {
   return stones.reduce((previousValue, currentValue) => {
@@ -32,7 +30,7 @@ const PlayerBox = (props: PlayerBoxProps) => {
 
   useEffect(() => {
     animate(score, getStonesValue(player.stones), {
-      duration: 1,
+      duration: SCORE_ANIMATION_DURATION_S,
       onUpdate: (latest) => setScore(Number(latest.toFixed(0))),
     });
   }, [player.stones.length]);

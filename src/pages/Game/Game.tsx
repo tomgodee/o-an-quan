@@ -2,14 +2,21 @@ import { useEffect, useState } from "react";
 
 import Box from "@mui/material/Box";
 
-import { CELL_TYPES, DIRECTIONS, STONE_TYPES } from "../../constants/constants";
+import {
+  CELL_TYPES,
+  DIRECTIONS,
+  SCORE_ANIMATION_DURATION_MS,
+  STONE_TYPES,
+} from "../../constants/constants";
+import type { Cell, DirectionType, Player, Stone } from "../../types/types";
 import { sortStonesByType } from "../../utils";
 import ImperialCell from "./components/ImperialCell";
 import PlayerBox from "./components/PlayerBox";
 import VillagerCell from "./components/VillagerCell";
+import EndGameModal from "./components/EndGameModal";
 import { createImperialStones, createVillagerStones } from "./database";
 
-import type { Cell, Stone, DirectionType, Player } from "../../types/types";
+const MINIMUM_RESEEDING_STONES_COUNT = 5;
 
 const Game = () => {
   const [cells, setCells] = useState<Cell[]>([]);
@@ -32,6 +39,7 @@ const Game = () => {
   const [shouldTriggerNextAction, setShouldTriggerNextAction] = useState(false);
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [numberOfWinningChain, setNumberOfWinningChain] = useState(0);
+  const [isEndGameModalOpen, setIsEndGameModalOpen] = useState(true);
 
   const initGame = () => {
     const villagerStones = createVillagerStones();
@@ -122,7 +130,56 @@ const Game = () => {
 
   const endGame = () => {
     setIsGameStarted(false);
-    alert("the game has ended!!!");
+    retriveStones(true);
+    setTimeout(() => {
+      retriveStones(false);
+    }, SCORE_ANIMATION_DURATION_MS * 5);
+
+    setTimeout(() => {
+      console.log(playerOne);
+      console.log(playerTwo);
+    }, SCORE_ANIMATION_DURATION_MS * 5 * 2 + 1000);
+  };
+
+  const retriveStones = (isPlayerOne: boolean) => {
+    const playerVillagerCells = isPlayerOne
+      ? cells.slice(6, 11)
+      : cells.slice(1, 6);
+
+    const nonEmptyCells = playerVillagerCells.filter(
+      (cell) => cell.stones.length > 0
+    );
+
+    for (let i = 0; i < nonEmptyCells.length; i += 1) {
+      setTimeout(() => {
+        const retrivedCell = nonEmptyCells[i];
+        let retrivedStones: Stone[] = [];
+        setCells((cells) => {
+          return cells.map((cell) => {
+            if (cell.id === retrivedCell.id) {
+              retrivedStones = [...cell.stones];
+              cell.stones = [];
+            }
+            return cell;
+          });
+        });
+        updatePlayerStones(isPlayerOne, retrivedStones);
+      }, (i + 1) * SCORE_ANIMATION_DURATION_MS);
+    }
+  };
+
+  const updatePlayerStones = (isPlayerOne: boolean, stones: Stone[]) => {
+    if (isPlayerOne) {
+      setPlayerOne((player) => ({
+        ...player,
+        stones: player.stones.concat(stones).sort(sortStonesByType),
+      }));
+    } else {
+      setPlayerTwo((player) => ({
+        ...player,
+        stones: player.stones.concat(stones).sort(sortStonesByType),
+      }));
+    }
   };
 
   const spreadStones = (cell: Cell, direction: DirectionType) => {
@@ -328,15 +385,22 @@ const Game = () => {
 
   useEffect(() => {
     const doCellsHaveStones = checkIfCellsHaveStones();
-    if (isGameStarted && !doCellsHaveStones) {
+    if (isGameStarted) {
       const currentPlayer = isPlayerOneTurn ? playerOne : playerTwo;
-      const playerVillagerStones: Stone[] = currentPlayer.stones.filter(
+      const playerVillagerStones = currentPlayer.stones.filter(
         (stone) => stone.type === STONE_TYPES.VILLAGER
       );
 
-      if (playerVillagerStones.length < 5 || areImperialCellsEmpty()) {
+      if (
+        (!doCellsHaveStones &&
+          playerVillagerStones.length < MINIMUM_RESEEDING_STONES_COUNT) ||
+        areImperialCellsEmpty()
+      ) {
         endGame();
-      } else {
+      } else if (
+        !doCellsHaveStones &&
+        playerVillagerStones.length >= MINIMUM_RESEEDING_STONES_COUNT
+      ) {
         reseedStones(playerVillagerStones.slice(0, 5));
       }
     }
@@ -393,8 +457,13 @@ const Game = () => {
                 handleClickDirectionButton={spreadStones}
                 isSelected={selectedCell?.id === cell.id}
                 isInteractable={
-                  ((isPlayerOneTurn && cell.id > 5 && cell.id <= 10) ||
-                    (!isPlayerOneTurn && cell.id <= 5)) &&
+                  ((isPlayerOneTurn &&
+                    cell.id > 5 &&
+                    cell.id <= 10 &&
+                    cell.stones.length > 0) ||
+                    (!isPlayerOneTurn &&
+                      cell.id <= 5 &&
+                      cell.stones.length > 0)) &&
                   !isSpreadingStones
                 }
                 isClicked={clickedCell?.id === cell.id}
@@ -409,6 +478,17 @@ const Game = () => {
       <Box width="20%">
         <PlayerBox player={playerOne} enabled={isPlayerOneTurn} />
       </Box>
+
+      <button
+        onClick={() => {
+          // endGame();
+          setIsEndGameModalOpen(true);
+        }}
+      >
+        end game
+      </button>
+
+      <EndGameModal open={isEndGameModalOpen} />
     </Box>
   );
 };
