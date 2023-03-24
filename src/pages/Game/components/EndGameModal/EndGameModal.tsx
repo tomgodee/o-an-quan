@@ -2,6 +2,7 @@ import laurel_wealth from "assets/laurel_wealth_a.png";
 import Particles from "react-particles";
 import { loadFireworksPreset } from "tsparticles-preset-fireworks";
 import { calculateStonesValue } from "utils/stone";
+
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogContentText from "@mui/material/DialogContentText";
@@ -14,16 +15,19 @@ import DialogContent from "../FramerMotion/DialogContent";
 
 import type { Player } from "types/types";
 import type { Engine } from "tsparticles-engine";
+
 interface EndGameModalProps {
   open: boolean;
   player: Player;
+  initGame: () => void;
 }
 
 const EndGameModal = (props: EndGameModalProps) => {
-  const { open, player } = props;
+  const { open, player, initGame } = props;
   const { palette } = useTheme();
   const handleClick = () => {
     console.log("play again");
+    initGame();
   };
 
   const variants = {
@@ -34,6 +38,10 @@ const EndGameModal = (props: EndGameModalProps) => {
     nameAnimate: {
       y: "0%",
       opacity: 1,
+    },
+    laurelWealthInitial: {
+      x: "-50%",
+      y: "-50%",
     },
   };
 
@@ -175,7 +183,7 @@ const EndGameModal = (props: EndGameModalProps) => {
         },
       }}
     >
-      <Particles id="tsparticles" init={customInit} options={options} />
+      <Particles id="tsparticles" init={customInit} options={options as any} />
 
       <DialogTitle
         variant="dialogBodyTitle"
@@ -200,25 +208,35 @@ const EndGameModal = (props: EndGameModalProps) => {
       >
         <Box
           display="flex"
-          justifyContent="space-around"
+          justifyContent="space-between"
           alignItems="center"
           px={8}
-          height={160}
+          height={180}
         >
-          <DialogContentText
-            color={palette.tertiary.main}
-            fontWeight={800}
-            variant="dialogBodyText"
-          >
-            TOM
-          </DialogContentText>
+          <Box width="60%">
+            <DialogContentText
+              color={palette.tertiary.main}
+              fontWeight={800}
+              variant="dialogBodyText"
+            >
+              {player.name}
+            </DialogContentText>
+          </Box>
+
           <Box
             position="relative"
+            width="30%"
             sx={{
               userSelect: "none",
             }}
           >
-            <Box position="absolute" top={-14} right={-20}>
+            <Box
+              position="absolute"
+              top="55%"
+              left="50%"
+              variants={variants}
+              initial="laurelWealthInitial"
+            >
               <img width={140} src={laurel_wealth} alt="laurel wealth" />
             </Box>
             <DialogContentText
@@ -227,6 +245,7 @@ const EndGameModal = (props: EndGameModalProps) => {
               variant="dialogBodyText"
               px={3}
               py={2}
+              textAlign="center"
             >
               {calculateStonesValue(player.stones)}
             </DialogContentText>

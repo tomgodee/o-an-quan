@@ -14,6 +14,7 @@ import type { Stone, Player } from "../../../../types/types";
 interface PlayerBoxProps {
   player: Player;
   enabled: boolean;
+  isPlayerOne: boolean;
 }
 
 const getStonesValue = (stones: Stone[]) => {
@@ -23,7 +24,7 @@ const getStonesValue = (stones: Stone[]) => {
 };
 
 const PlayerBox = (props: PlayerBoxProps) => {
-  const { player, enabled } = props;
+  const { player, enabled, isPlayerOne } = props;
   const { palette } = useTheme();
 
   const [score, setScore] = useState(0);
@@ -37,22 +38,35 @@ const PlayerBox = (props: PlayerBoxProps) => {
 
   return (
     <Box
-      className={enabled ? "rainbow" : ""}
-      border={!enabled ? `6px solid ${palette.grey[400]}` : ""}
+      display="flex"
+      flexDirection={isPlayerOne ? "column" : "column-reverse"}
     >
       <Box
-        width="100%"
-        py={2}
-        // borderLeft={`3px solid ${palette.secondary.main}`}
-        display="flex"
-        justifyContent="center"
+        className={enabled ? "rainbow" : ""}
+        border={!enabled ? `6px solid ${palette.grey[400]}` : ""}
       >
-        <Typography
-          variant="score"
-          fontWeight={700}
-          color={palette.quinary.main}
+        <Box
+          width="100%"
+          py={2}
+          // borderLeft={`3px solid ${palette.secondary.main}`}
+          display="flex"
+          justifyContent="center"
         >
-          {score}
+          <Typography
+            variant="score"
+            fontWeight={700}
+            color={palette.quinary.main}
+          >
+            {score}
+          </Typography>
+        </Box>
+      </Box>
+      <Box mb={isPlayerOne ? 0 : 2} mt={isPlayerOne ? 2 : 0}>
+        <Typography
+          textAlign="center"
+          color={enabled ? palette.secondary.main : palette.grey[600]}
+        >
+          {player.name}
         </Typography>
       </Box>
     </Box>

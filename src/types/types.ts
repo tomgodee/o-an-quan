@@ -26,5 +26,6 @@ export interface Cell {
 export type DirectionType = typeof DIRECTIONS[keyof typeof DIRECTIONS];
 
 export interface Player {
+  name: string;
   stones: Stone[];
 }

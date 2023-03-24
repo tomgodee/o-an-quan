@@ -1,6 +1,6 @@
 import "./App.css";
 
-import { useState } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 import CssBaseline from "@mui/material/CssBaseline";
 import {
@@ -11,17 +11,19 @@ import {
 import reactLogo from "./assets/react.svg";
 import theme from "./theme";
 
-function App() {
-  const [count, setCount] = useState(0);
+const queryClient = new QueryClient();
 
+function App() {
   return (
     <>
-      <CssVarsProvider>
-        {/* <CssBaseline /> */}
-        <ThemeProvider theme={theme}>
-          <div>This is App</div>
-        </ThemeProvider>
-      </CssVarsProvider>
+      <QueryClientProvider client={queryClient}>
+        <CssVarsProvider>
+          <CssBaseline />
+          <ThemeProvider theme={theme}>
+            <div>This is App</div>
+          </ThemeProvider>
+        </CssVarsProvider>
+      </QueryClientProvider>
     </>
   );
 }

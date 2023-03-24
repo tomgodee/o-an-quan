@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { generateRandomName } from "utils/players";
+import { sortStonesByType, calculateStonesValue } from "utils/stone";
 
 import Box from "@mui/material/Box";
 
@@ -8,13 +10,13 @@ import {
   SCORE_ANIMATION_DURATION_MS,
   STONE_TYPES,
 } from "../../constants/constants";
-import type { Cell, DirectionType, Player, Stone } from "../../types/types";
-import { sortStonesByType } from "utils/stone";
+import EndGameModal from "./components/EndGameModal";
 import ImperialCell from "./components/ImperialCell";
 import PlayerBox from "./components/PlayerBox";
 import VillagerCell from "./components/VillagerCell";
-import EndGameModal from "./components/EndGameModal";
 import { createImperialStones, createVillagerStones } from "./database";
+
+import type { Cell, DirectionType, Player, Stone } from "../../types/types";
 
 const MINIMUM_RESEEDING_STONES_COUNT = 5;
 
@@ -29,9 +31,11 @@ const Game = () => {
   );
   const [direction, setDirection] = useState<DirectionType>(DIRECTIONS.LEFT);
   const [playerOne, setPlayerOne] = useState<Player>({
+    name: generateRandomName(),
     stones: [],
   });
   const [playerTwo, setPlayerTwo] = useState<Player>({
+    name: generateRandomName(),
     stones: [],
   });
   const [isPlayerOneTurn, setIsPlayerOneTurn] = useState(true);
@@ -39,7 +43,7 @@ const Game = () => {
   const [shouldTriggerNextAction, setShouldTriggerNextAction] = useState(false);
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [numberOfWinningChain, setNumberOfWinningChain] = useState(0);
-  const [isEndGameModalOpen, setIsEndGameModalOpen] = useState(true);
+  const [isEndGameModalOpen, setIsEndGameModalOpen] = useState(false);
 
   const initGame = () => {
     const villagerStones = createVillagerStones();
@@ -76,6 +80,10 @@ const Game = () => {
         shouldShowDroppingAnimation: false,
       },
     ]);
+
+    setPlayerOne({ ...playerOne, stones: [] });
+    setPlayerTwo({ ...playerTwo, stones: [] });
+    setIsEndGameModalOpen(false);
   };
 
   const checkIfCellsHaveStones = () => {
@@ -130,26 +138,29 @@ const Game = () => {
 
   const endGame = () => {
     setIsGameStarted(false);
-    retriveStones(true);
+    const isPlayerOne = true;
+
+    const playerOneNonEmptyCells = cells
+      .slice(6, 11)
+      .filter((cell) => cell.stones.length > 0);
+
+    const playerTwoNonEmptyCells = cells
+      .slice(1, 6)
+      .filter((cell) => cell.stones.length > 0);
+
+    retriveStones(isPlayerOne, playerOneNonEmptyCells);
     setTimeout(() => {
-      retriveStones(false);
-    }, SCORE_ANIMATION_DURATION_MS * 5);
+      retriveStones(!isPlayerOne, playerTwoNonEmptyCells);
+    }, SCORE_ANIMATION_DURATION_MS * playerOneNonEmptyCells.length);
 
     setTimeout(() => {
       console.log(playerOne);
       console.log(playerTwo);
-    }, SCORE_ANIMATION_DURATION_MS * 5 * 2 + 1000);
+      setIsEndGameModalOpen(true);
+    }, SCORE_ANIMATION_DURATION_MS * (playerOneNonEmptyCells.length + playerTwoNonEmptyCells.length) + 1000);
   };
 
-  const retriveStones = (isPlayerOne: boolean) => {
-    const playerVillagerCells = isPlayerOne
-      ? cells.slice(6, 11)
-      : cells.slice(1, 6);
-
-    const nonEmptyCells = playerVillagerCells.filter(
-      (cell) => cell.stones.length > 0
-    );
-
+  const retriveStones = (isPlayerOne: boolean, nonEmptyCells: Cell[]) => {
     for (let i = 0; i < nonEmptyCells.length; i += 1) {
       setTimeout(() => {
         const retrivedCell = nonEmptyCells[i];
@@ -379,6 +390,13 @@ const Game = () => {
     return [cells[0], cells[11]].every((cell) => cell.stones.length === 0);
   };
 
+  const getWinner = () => {
+    const playerOneScore = calculateStonesValue(playerOne.stones);
+    const playerTwoScore = calculateStonesValue(playerTwo.stones);
+
+    return playerOneScore > playerTwoScore ? playerOne : playerTwo;
+  };
+
   useEffect(() => {
     initGame();
   }, []);
@@ -423,6 +441,7 @@ const Game = () => {
         setLastTouchedVillagerCell(winningCell);
       }
 
+      console.log("thirdInLineCell", thirdInLineCell);
       if (thirdInLineCell.stones.length > 0) {
         endTurn();
       } else {
@@ -441,7 +460,11 @@ const Game = () => {
       height="100vh"
     >
       <Box width="20%">
-        <PlayerBox player={playerTwo} enabled={!isPlayerOneTurn} />
+        <PlayerBox
+          player={playerTwo}
+          enabled={!isPlayerOneTurn}
+          isPlayerOne={false}
+        />
       </Box>
 
       <Box display="flex" width="100%">
@@ -476,19 +499,14 @@ const Game = () => {
       </Box>
 
       <Box width="20%">
-        <PlayerBox player={playerOne} enabled={isPlayerOneTurn} />
+        <PlayerBox player={playerOne} enabled={isPlayerOneTurn} isPlayerOne />
       </Box>
 
-      <button
-        onClick={() => {
-          // endGame();
-          setIsEndGameModalOpen(true);
-        }}
-      >
-        end game
-      </button>
-
-      <EndGameModal open={isEndGameModalOpen} player={playerOne} />
+      <EndGameModal
+        open={isEndGameModalOpen}
+        player={getWinner()}
+        initGame={initGame}
+      />
     </Box>
   );
 };
