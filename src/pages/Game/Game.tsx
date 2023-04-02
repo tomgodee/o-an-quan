@@ -44,6 +44,8 @@ const Game = () => {
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [numberOfWinningChain, setNumberOfWinningChain] = useState(0);
   const [isEndGameModalOpen, setIsEndGameModalOpen] = useState(false);
+  const [villagerCellWidth, setVillagerCellWidth] = useState(0);
+  const [imperialCellWidth, setImperialCellWidth] = useState(0);
 
   const initGame = () => {
     const villagerStones = createVillagerStones();
@@ -83,6 +85,7 @@ const Game = () => {
 
     setPlayerOne({ ...playerOne, stones: [] });
     setPlayerTwo({ ...playerTwo, stones: [] });
+    setIsPlayerOneTurn(true);
     setIsEndGameModalOpen(false);
   };
 
@@ -197,6 +200,7 @@ const Game = () => {
     setIsGameStarted(true);
     setIsSpreadingStones(true);
     setSelectedCell(cell);
+    setLastTouchedVillagerCell(cell);
     setDirection(direction);
 
     let currentCell = { ...cell };
@@ -231,7 +235,9 @@ const Game = () => {
 
           if (direction === DIRECTIONS.LEFT) {
             currentCells[leftCellIndex].stones.push(spreadingStone as Stone);
-            currentCells[leftCellIndex].shouldShowDroppingAnimation = true;
+            if (!isLastLoop) {
+              currentCells[leftCellIndex].shouldShowDroppingAnimation = true;
+            }
             if (leftCellIndex === 0) {
               direction = DIRECTIONS.RIGHT;
               rightCellIndex = currentCell.id === 1 ? 6 : 1;
@@ -242,7 +248,9 @@ const Game = () => {
             }
           } else if (direction === DIRECTIONS.RIGHT) {
             currentCells[rightCellIndex].stones.push(spreadingStone as Stone);
-            currentCells[rightCellIndex].shouldShowDroppingAnimation = true;
+            if (!isLastLoop) {
+              currentCells[rightCellIndex].shouldShowDroppingAnimation = true;
+            }
             if (rightCellIndex === 11) {
               direction = DIRECTIONS.LEFT;
               leftCellIndex = currentCell.id === 5 ? 10 : 5;
@@ -254,6 +262,7 @@ const Game = () => {
           }
 
           setDirection(direction);
+          setSelectedCell(null);
 
           setLastTouchedCell(currentCell);
           if (currentCell.type === CELL_TYPES.VILLAGER) {
@@ -266,7 +275,7 @@ const Game = () => {
 
           return currentCells;
         });
-      }, (i + 1) * 200);
+      }, (i + 1) * SCORE_ANIMATION_DURATION_MS);
     }
   };
 
@@ -441,7 +450,6 @@ const Game = () => {
         setLastTouchedVillagerCell(winningCell);
       }
 
-      console.log("thirdInLineCell", thirdInLineCell);
       if (thirdInLineCell.stones.length > 0) {
         endTurn();
       } else {
@@ -468,7 +476,17 @@ const Game = () => {
       </Box>
 
       <Box display="flex" width="100%">
-        {cells.length > 11 && <ImperialCell cell={cells[0]} reversed />}
+        {cells.length > 11 && (
+          <ImperialCell
+            cell={cells[0]}
+            villagerCellWidth={villagerCellWidth}
+            reversed
+            imperialCellWidth={imperialCellWidth}
+            setImperialCellWidth={setImperialCellWidth}
+            lastTouchedVillagerCell={lastTouchedVillagerCell}
+            direction={direction}
+          />
+        )}
         <Box display="grid" width="60%" gridTemplateColumns="repeat(5, 20%)">
           {cells.slice(1, 11).map((cell) => {
             return (
@@ -491,11 +509,22 @@ const Game = () => {
                 }
                 isClicked={clickedCell?.id === cell.id}
                 setClickedCell={setClickedCell}
+                villagerCellWidth={villagerCellWidth}
+                setVillagerCellWidth={setVillagerCellWidth}
               />
             );
           })}
         </Box>
-        {cells.length > 11 && <ImperialCell cell={cells[11]} />}
+        {cells.length > 11 && (
+          <ImperialCell
+            cell={cells[11]}
+            villagerCellWidth={villagerCellWidth}
+            imperialCellWidth={imperialCellWidth}
+            setImperialCellWidth={setImperialCellWidth}
+            lastTouchedVillagerCell={lastTouchedVillagerCell}
+            direction={direction}
+          />
+        )}
       </Box>
 
       <Box width="20%">

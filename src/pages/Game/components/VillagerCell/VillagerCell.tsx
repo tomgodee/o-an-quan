@@ -1,5 +1,6 @@
 import { Variants } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { calculateStonesValue } from "utils/stone";
 
 import { faHand } from "@fortawesome/free-regular-svg-icons";
 import { faCircleLeft, faCircleRight } from "@fortawesome/free-solid-svg-icons";
@@ -7,12 +8,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 
-import { DIRECTIONS } from "../../../../constants/constants";
+import {
+  DIRECTIONS,
+  SCORE_ANIMATION_DURATION_S,
+} from "../../../../constants/constants";
 import { useBreakPoints } from "../../../../customHooks/useBreakPoints";
 import { getPebbleImage } from "../../../../utils";
-import { calculateStonesValue } from "utils/stone";
 import Box from "../../components/FramerMotion/Box";
 import { VillagerCell as VillagerCellComponent } from "./styles";
+import { getCellVariants, getHandVariants } from "./variants";
 
 import type { Cell, DirectionType } from "../../../../types/types";
 interface VillagerCellProps {
@@ -24,6 +28,8 @@ interface VillagerCellProps {
   handleClickDirectionButton: (cell: Cell, direction: DirectionType) => void;
   isClicked: boolean;
   setClickedCell: React.Dispatch<React.SetStateAction<Cell | null>>;
+  villagerCellWidth: number;
+  setVillagerCellWidth: React.Dispatch<React.SetStateAction<number>>;
 }
 
 function VillagerCell(props: VillagerCellProps) {
@@ -36,6 +42,8 @@ function VillagerCell(props: VillagerCellProps) {
     isInteractable,
     isClicked,
     setClickedCell,
+    villagerCellWidth,
+    setVillagerCellWidth,
   } = props;
   const { isScreenXs, isScreenSm, isScreenMd, isScreenLg, isScreenXl } =
     useBreakPoints();
@@ -44,21 +52,11 @@ function VillagerCell(props: VillagerCellProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isLeftButtonClicked, setIsLeftButtonClicked] = useState(false);
   const [isRightButtonClicked, setIsRightButtonClicked] = useState(false);
-  const [cellWidth, setCellWidth] = useState(0);
-  // const [isGrabbingHandShown, setIsGrabbingHandShown] = useState(false);
   const cellRef = useRef<HTMLDivElement>(null);
-  // if (cell.id === 10) {
-  //   console.log("isSelected", isSelected);
-  //   console.log("direction", direction);
-  //   console.log(
-  //     "cell.shouldShowDroppingAnimation",
-  //     cell.shouldShowDroppingAnimation
-  //   );
-  // }
 
   const handleResize = () => {
     if (cellRef.current !== null) {
-      setCellWidth(cellRef.current.clientWidth || 0);
+      setVillagerCellWidth(cellRef.current.clientWidth || 0);
     }
   };
 
@@ -85,178 +83,34 @@ function VillagerCell(props: VillagerCellProps) {
       });
       setIsLeftButtonClicked(false);
       setIsRightButtonClicked(false);
-
-      if (cellRef && cellRef.current) {
-        cellRef.current.focus();
-        // console.log("focus");
-      }
     }
   };
 
-  const cellVariants = {
-    leftButtonInitial: {
-      x: "0%",
-      y: "-30%",
-      backgroundImage: `linear-gradient(to right, ${palette.tertiary.main} 50%, ${palette.quaternary.main} 50%)`,
-      backgroundSize: "200% 100%",
-      backgroundPosition: "left",
-      opacity: 0,
-      scale: 0,
-    },
-    leftButtonWhileHover: {
-      scale: 1.2,
-      backgroundPosition: "right",
-    },
-    leftButtonWhenNotShownWhileHover: {
-      backgroundPosition: "right",
-    },
-    leftButtonVisible: {
-      opacity: 1,
-      x: "-80%",
-      y: "-70%",
-      scale: 1,
-    },
-    hidden: {
-      opacity: 0,
-    },
-    onClickLeftButtonHidden: {
-      opacity: 0,
-      x: "-80%",
-      y: "-70%",
-      scale: 1.5,
-      backgroundPosition: "right",
-    },
-    rightButtonInitial: {
-      x: "0%",
-      y: "-30%",
-      backgroundImage: `linear-gradient(to right, ${palette.quaternary.main} 50%, ${palette.tertiary.main} 50%)`,
-      backgroundSize: "200% 100%",
-      backgroundPosition: "right",
-      opacity: 0,
-      scale: 0,
-      zIndex: 1,
-    },
-    rightButtonWhileHover: {
-      scale: 1.2,
-      backgroundPosition: "left",
-      zIndex: 1,
-    },
-    rightButtonWhenNotShownWhileHover: {
-      backgroundPosition: "left",
-      zIndex: 1,
-    },
-    rightButtonVisible: {
-      opacity: 1,
-      x: "80%",
-      y: "-70%",
-      scale: 1,
-      zIndex: 1,
-    },
-    onClickRightButtonHidden: {
-      opacity: 0,
-      x: "80%",
-      y: "-70%",
-      scale: 1.5,
-      backgroundPosition: "left",
-    },
-  };
+  const cellVariants = getCellVariants(palette);
 
   const handVariants = useMemo(() => {
     const BORDER_WIDTH = 6;
     // HAND_WIDTH will change based on screen's size
     const HAND_WIDTH = 80;
-    const offsetX = ((cellWidth / 2 + BORDER_WIDTH) / HAND_WIDTH) * 100;
+    const wholevillagerCellWidth = (villagerCellWidth / 2 + BORDER_WIDTH) * 2;
+    // multiply by 2 means getting the width of the whole cell
+    // multiply by 100 means the hand will move a distance equals to the cell's width
+    const offsetX = (wholevillagerCellWidth / HAND_WIDTH) * 100;
+    // console.log("villagerCellWidth", villagerCellWidth);
 
-    if (isScreenXl)
-      return {
-        gettingStonesHandInitial: {
-          x: "-50%",
-          y: "40%",
-          opacity: 0.2,
-        },
-        gettingStonesHandLeftAnimate: {
-          x: "-50%",
-          y: "0%",
-          opacity: 1,
-        },
-      };
-    if (isScreenLg)
-      return {
-        gettingStonesHandInitial: {
-          x: "-50%",
-          y: "40%",
-          opacity: 0.2,
-        },
-        gettingStonesHandLeftAnimate: {
-          x: "-50%",
-          y: "0%",
-          opacity: 1,
-        },
-      };
-    if (isScreenMd)
-      return {
-        gettingStonesHandInitial: {
-          x: "-50%",
-          y: "40%",
-          opacity: 0.2,
-        },
-        gettingStonesHandLeftAnimate: {
-          x: "-50%",
-          y: "10%",
-          opacity: 1,
-        },
-      };
-    if (isScreenSm)
-      return {
-        gettingStonesHandInitial: {
-          x: "-1%",
-          y: "60%",
-          opacity: 0.2,
-        },
-        gettingStonesHandLeftAnimate: {
-          x: [null, "0%", `-${offsetX}%`, `-${offsetX}%`],
-          y: [null, "20%", "20%", "20%"],
-          opacity: [null, 1, 1, 0],
-        },
-        gettingStonesHandRightAnimate: {
-          x: [null, "0%", `${offsetX}%`, `${offsetX}%`],
-          y: [null, "20%", "20%", "20%"],
-          opacity: [null, 1, 1, 0],
-        },
-        droppingStoneHandLeftInitial: {
-          x: `${offsetX}%`,
-          y: "20%",
-          opacity: 1,
-        },
-        droppingStoneHandRightInitial: {
-          x: `-${offsetX}%`,
-          y: "20%",
-          opacity: 1,
-        },
-        droppingStoneHandLeftAnimate: {
-          x: `-${offsetX}%`,
-          y: "20%",
-        },
-        droppingStoneHandRightAnimate: {
-          x: `${offsetX}%`,
-          y: "20%",
-        },
-      };
-    if (isScreenXs)
-      return {
-        gettingStonesHandInitial: {
-          x: "-50%",
-          y: "40%",
-          opacity: 0.2,
-        },
-        gettingStonesHandLeftAnimate: {
-          x: "-50%",
-          y: "30%",
-          opacity: 1,
-        },
-      };
-    return "1x";
-  }, [isScreenXs, isScreenSm, isScreenMd, isScreenLg, isScreenXl, cellWidth]);
+    if (isScreenXl) return getHandVariants("Xl", offsetX);
+    if (isScreenLg) return getHandVariants("Lg", offsetX);
+    if (isScreenMd) return getHandVariants("Md", offsetX);
+    if (isScreenSm) return getHandVariants("Sm", offsetX);
+    if (isScreenXs) return getHandVariants("Xs", offsetX);
+  }, [
+    isScreenXs,
+    isScreenSm,
+    isScreenMd,
+    isScreenLg,
+    isScreenXl,
+    villagerCellWidth,
+  ]);
 
   const animateLeftButton = () => {
     if (isClicked) return "leftButtonVisible";
@@ -274,11 +128,7 @@ function VillagerCell(props: VillagerCellProps) {
 
   const getHandInitial = () => {
     if (cell.shouldShowDroppingAnimation) {
-      if (direction === DIRECTIONS.LEFT) {
-        return "droppingStoneHandLeftInitial";
-      } else if (direction === DIRECTIONS.RIGHT) {
-        return "droppingStoneHandRightInitial";
-      }
+      return "droppingStoneHandInitial";
     } else if (isSelected) return "gettingStonesHandInitial";
 
     return undefined;
@@ -287,15 +137,23 @@ function VillagerCell(props: VillagerCellProps) {
   const getHandAnimate = () => {
     if (cell.shouldShowDroppingAnimation) {
       if (direction === DIRECTIONS.LEFT) {
+        if (cell.id === 1) return "droppingStoneHandTopLeftAnimate";
+        else if (cell.id === 6) return "droppingStoneHandBottomLeftAnimate";
         return "droppingStoneHandLeftAnimate";
       } else if (direction === DIRECTIONS.RIGHT) {
+        if (cell.id === 5) return "droppingStoneHandTopRightAnimate";
+        else if (cell.id === 10) return "droppingStoneHandBottomRightAnimate";
         return "droppingStoneHandRightAnimate";
       }
     } else if (isSelected) {
       if (direction === DIRECTIONS.LEFT) {
+        if (cell.id === 1) return "gettingStonesHandTopLeftAnimate";
+        else if (cell.id === 6) return "gettingStonesHandBottomLeftAnimate";
         return "gettingStonesHandLeftAnimate";
       } else if (direction === DIRECTIONS.RIGHT) {
-        return "gettingStonesHandRightAnimate";
+        if (cell.id === 5) return "gettingStonesHandTopRightAnimate";
+        else if (cell.id === 10) return "gettingStonesHandBottomRightAnimate";
+        else return "gettingStonesHandRightAnimate";
       }
     }
 
@@ -304,9 +162,15 @@ function VillagerCell(props: VillagerCellProps) {
 
   const getHandDuration = () => {
     // Make the hand to disappear at the very last moment
-    if (isSelected) return { duration: 2, times: [0, 0.5, 0.99999, 1] };
-    else if (cell.shouldShowDroppingAnimation) return { duration: 2 };
-    return { duration: 1 };
+    if (isSelected)
+      return {
+        duration: SCORE_ANIMATION_DURATION_S,
+        times: [0, 0.5, 0.9999, 1],
+      };
+    else if (cell.shouldShowDroppingAnimation) {
+      return { duration: SCORE_ANIMATION_DURATION_S };
+    }
+    return { duration: SCORE_ANIMATION_DURATION_S };
   };
 
   const iconSize = useMemo(() => {
@@ -333,6 +197,13 @@ function VillagerCell(props: VillagerCellProps) {
     };
   }, [cellRef]);
 
+  // if (cell.id === 4) {
+  //   console.log(
+  //     "4 shouldShowDroppingAnimation",
+  //     cell.shouldShowDroppingAnimation
+  //   );
+  // }
+
   return (
     <VillagerCellComponent
       reversed={reversed || false}
@@ -357,34 +228,6 @@ function VillagerCell(props: VillagerCellProps) {
           <FontAwesomeIcon icon={faHand} size={iconSize} />
         </Box>
       )}
-      {/* {cell.id === 6 && (
-        <Box
-          position="absolute"
-          // left="50%"
-          top="0%"
-          zIndex={10}
-          variants={handVariants as Variants}
-          initial="droppingStoneHandInitial"
-          animate={getHandAnimate()}
-          transition={{ duration: getHandDuration() }}
-        >
-          <FontAwesomeIcon icon={faHand} size={iconSize} />
-        </Box>
-      )} */}
-
-      {/* {isGrabbingHandShown && (
-        <Box
-          position="absolute"
-          left="50%"
-          top="0%"
-          zIndex={10}
-          variants={handVariants as Variants}
-          initial="gettingStonesHandLeftAnimate"
-          transition={{ duration: 0 }}
-        >
-          <FontAwesomeIcon icon={faHandBackFist} size={iconSize} />
-        </Box>
-      )} */}
 
       <Box position="absolute" width="80%" height="80%">
         {cell.stones.map((stone) => {

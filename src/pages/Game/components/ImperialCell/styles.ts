@@ -12,7 +12,7 @@ export const ImperialCell = styled(Box)<ImperialCellProps>((props) => {
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
-    padding: reversed ? "96px 6px 96px 24px" : "96px 24px 96px 6px",
+    padding: reversed ? "96px 6px 96px 6px" : "96px 6px 96px 6px",
     width: "20%",
     border: `6px solid ${theme.palette.primary.main}`,
     borderTopLeftRadius: reversed ? "50%" : 0,
