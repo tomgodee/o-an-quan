@@ -18,5 +18,8 @@ export const STONE_VALUES = {
   IMPERIAL: 10,
 } as const;
 
-export const SCORE_ANIMATION_DURATION_S = 0.51;
+export const SCORE_ANIMATION_DURATION_S = 0.65;
 export const SCORE_ANIMATION_DURATION_MS = SCORE_ANIMATION_DURATION_S * 1000;
+
+export const CELL_BORDER_WIDTH = 6;
+export const CELL_THIN_BORDER_WIDTH = 3;

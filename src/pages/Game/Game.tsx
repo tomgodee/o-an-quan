@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { generateRandomName } from "utils/players";
-import { sortStonesByType, calculateStonesValue } from "utils/stone";
+import { calculateStonesValue, sortStonesByType } from "utils/stone";
 
 import Box from "@mui/material/Box";
 
@@ -10,6 +10,7 @@ import {
   SCORE_ANIMATION_DURATION_MS,
   STONE_TYPES,
 } from "../../constants/constants";
+import { useBreakPoints } from "../../customHooks/useBreakPoints";
 import EndGameModal from "./components/EndGameModal";
 import ImperialCell from "./components/ImperialCell";
 import PlayerBox from "./components/PlayerBox";
@@ -21,6 +22,8 @@ import type { Cell, DirectionType, Player, Stone } from "../../types/types";
 const MINIMUM_RESEEDING_STONES_COUNT = 5;
 
 const Game = () => {
+  const { isScreenXs, isScreenSm, isScreenMd, isScreenLg, isScreenXl } =
+    useBreakPoints();
   const [cells, setCells] = useState<Cell[]>([]);
   const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
   const [clickedCell, setClickedCell] = useState<Cell | null>(null);
@@ -157,8 +160,6 @@ const Game = () => {
     }, SCORE_ANIMATION_DURATION_MS * playerOneNonEmptyCells.length);
 
     setTimeout(() => {
-      console.log(playerOne);
-      console.log(playerTwo);
       setIsEndGameModalOpen(true);
     }, SCORE_ANIMATION_DURATION_MS * (playerOneNonEmptyCells.length + playerTwoNonEmptyCells.length) + 1000);
   };
@@ -406,6 +407,14 @@ const Game = () => {
     return playerOneScore > playerTwoScore ? playerOne : playerTwo;
   };
 
+  const boardWidth = useMemo(() => {
+    if (isScreenXl) return "50%";
+    else if (isScreenLg) return "60%";
+    else if (isScreenMd) return "80%";
+    else if (isScreenXs || isScreenSm) return "100%";
+    return "80%";
+  }, [isScreenXs, isScreenSm, isScreenMd, isScreenLg, isScreenXl]);
+
   useEffect(() => {
     initGame();
   }, []);
@@ -450,7 +459,7 @@ const Game = () => {
         setLastTouchedVillagerCell(winningCell);
       }
 
-      if (thirdInLineCell.stones.length > 0) {
+      if (thirdInLineCell.stones?.length > 0) {
         endTurn();
       } else {
         collectWinningStones(thirdInLineCell, lastTouchedVillagerCell);
@@ -464,10 +473,14 @@ const Game = () => {
       flexDirection="column"
       width="100%"
       alignItems="center"
-      justifyContent="space-around"
+      justifyContent={isScreenSm ? "space-around" : "space-between"}
       height="100vh"
     >
-      <Box width="20%">
+      <Box
+        width={isScreenSm ? 180 : "100%"}
+        display="flex"
+        justifyContent="center"
+      >
         <PlayerBox
           player={playerTwo}
           enabled={!isPlayerOneTurn}
@@ -475,19 +488,40 @@ const Game = () => {
         />
       </Box>
 
-      <Box display="flex" width="100%">
+      <Box
+        display="flex"
+        width={boardWidth}
+        maxWidth={isScreenSm ? 1920 / 2 : 460}
+        flexDirection={isScreenSm ? "row" : "column"}
+        alignItems={isScreenSm ? "" : "center"}
+      >
         {cells.length > 11 && (
-          <ImperialCell
-            cell={cells[0]}
-            villagerCellWidth={villagerCellWidth}
-            reversed
-            imperialCellWidth={imperialCellWidth}
-            setImperialCellWidth={setImperialCellWidth}
-            lastTouchedVillagerCell={lastTouchedVillagerCell}
-            direction={direction}
-          />
+          <Box
+            display="flex"
+            justifyContent="center"
+            width={isScreenSm ? "20%" : "60%"}
+          >
+            <ImperialCell
+              cell={cells[0]}
+              villagerCellWidth={villagerCellWidth}
+              reversed
+              imperialCellWidth={imperialCellWidth}
+              setImperialCellWidth={setImperialCellWidth}
+              lastTouchedVillagerCell={lastTouchedVillagerCell}
+              direction={direction}
+            />
+          </Box>
         )}
-        <Box display="grid" width="60%" gridTemplateColumns="repeat(5, 20%)">
+        <Box
+          display="grid"
+          width="60%"
+          gridTemplateColumns={
+            isScreenSm ? "repeat(5, 20%)" : " repeat(2, 50%)"
+          }
+          gridTemplateRows={isScreenSm ? "repeat(2, 50%)" : "repeat(5, 20%)"}
+          gridAutoFlow={isScreenSm ? "row" : "column"}
+          height={isScreenSm ? "auto" : 400}
+        >
           {cells.slice(1, 11).map((cell) => {
             return (
               <VillagerCell
@@ -516,18 +550,28 @@ const Game = () => {
           })}
         </Box>
         {cells.length > 11 && (
-          <ImperialCell
-            cell={cells[11]}
-            villagerCellWidth={villagerCellWidth}
-            imperialCellWidth={imperialCellWidth}
-            setImperialCellWidth={setImperialCellWidth}
-            lastTouchedVillagerCell={lastTouchedVillagerCell}
-            direction={direction}
-          />
+          <Box
+            display="flex"
+            justifyContent="center"
+            width={isScreenSm ? "20%" : "60%"}
+          >
+            <ImperialCell
+              cell={cells[11]}
+              villagerCellWidth={villagerCellWidth}
+              imperialCellWidth={imperialCellWidth}
+              setImperialCellWidth={setImperialCellWidth}
+              lastTouchedVillagerCell={lastTouchedVillagerCell}
+              direction={direction}
+            />
+          </Box>
         )}
       </Box>
 
-      <Box width="20%">
+      <Box
+        width={isScreenSm ? 180 : "100%"}
+        display="flex"
+        justifyContent="center"
+      >
         <PlayerBox player={playerOne} enabled={isPlayerOneTurn} isPlayerOne />
       </Box>
 

@@ -26,7 +26,6 @@ const EndGameModal = (props: EndGameModalProps) => {
   const { open, player, initGame } = props;
   const { palette } = useTheme();
   const handleClick = () => {
-    console.log("play again");
     initGame();
   };
 

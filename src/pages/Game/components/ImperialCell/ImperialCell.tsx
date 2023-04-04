@@ -1,4 +1,11 @@
 import stoneIcon from "assets/stone.png";
+import {
+  CELL_BORDER_WIDTH,
+  CELL_THIN_BORDER_WIDTH,
+  DIRECTIONS,
+  SCORE_ANIMATION_DURATION_S,
+  STONE_TYPES,
+} from "constants/constants";
 import { Variants } from "framer-motion";
 import { useEffect, useMemo, useRef } from "react";
 import { calculateStonesValue } from "utils/stone";
@@ -7,23 +14,13 @@ import { faHand } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Typography from "@mui/material/Typography";
 
-import {
-  DIRECTIONS,
-  SCORE_ANIMATION_DURATION_S,
-  STONE_TYPES,
-} from "../../../../constants/constants";
-import { useBreakPoints } from "../../../../customHooks/useBreakPoints";
+import { useBreakPoints, useIconSize } from "../../../../customHooks";
 import { getPebbleImage } from "../../../../utils";
 import Box from "../FramerMotion/Box";
 import { ImperialCell as ImperialCellComponent } from "./styles";
 import { getHandVariants } from "./variants";
 
-import type {
-  Cell,
-  DirectionType,
-  Player,
-  Stone,
-} from "../../../../types/types";
+import type { Cell, DirectionType, Stone } from "types/types";
 interface ImperialCellProps {
   reversed?: boolean;
   cell: Cell;
@@ -48,6 +45,7 @@ const ImperialCell = (props: ImperialCellProps) => {
   } = props;
   const { isScreenXs, isScreenSm, isScreenMd, isScreenLg, isScreenXl } =
     useBreakPoints();
+  const { iconSize, iconWidth } = useIconSize();
   const imperialCellRef = useRef<HTMLDivElement>(null);
 
   const handleResize = () => {
@@ -56,21 +54,10 @@ const ImperialCell = (props: ImperialCellProps) => {
     }
   };
 
-  const iconSize = useMemo(() => {
-    if (isScreenXl) return "8x";
-    if (isScreenLg) return "7x";
-    if (isScreenMd) return "6x";
-    if (isScreenSm) return "5x";
-    if (isScreenXs) return "4x";
-    return "1x";
-  }, [isScreenXs, isScreenSm, isScreenMd, isScreenLg, isScreenXl]);
-
   const handVariants = useMemo(() => {
-    const BORDER_WIDTH = 6;
-    // HAND_WIDTH will change based on screen's size
-    const HAND_WIDTH = 80;
-    const halfImperialCellWidth = imperialCellWidth / 2 + BORDER_WIDTH;
-    const halfVillagerCellWidth = villagerCellWidth / 2 + BORDER_WIDTH;
+    const halfImperialCellWidth = imperialCellWidth / 2 + CELL_BORDER_WIDTH;
+    const halfVillagerCellWidth =
+      villagerCellWidth / 2 + CELL_THIN_BORDER_WIDTH;
 
     const offsetXInitial =
       ((halfImperialCellWidth - halfVillagerCellWidth) /
@@ -78,8 +65,7 @@ const ImperialCell = (props: ImperialCellProps) => {
       100;
 
     const offsetXAnimate =
-      (halfVillagerCellWidth / HAND_WIDTH +
-        halfImperialCellWidth / HAND_WIDTH) *
+      (halfVillagerCellWidth / iconWidth + halfImperialCellWidth / iconWidth) *
       100;
 
     if (isScreenXl)
@@ -112,6 +98,7 @@ const ImperialCell = (props: ImperialCellProps) => {
   const getHandAnimate = () => {
     if (cell.shouldShowDroppingAnimation) {
       // TODO: Refactor this direction problem for better readability
+      // add isTop variable will solve this
       if (direction === DIRECTIONS.RIGHT) {
         return lastTouchedVillagerCell.id <= 5
           ? "droppingStoneHandTopLeftAnimate"
@@ -139,7 +126,11 @@ const ImperialCell = (props: ImperialCellProps) => {
   }, [imperialCellRef]);
 
   return (
-    <ImperialCellComponent ref={imperialCellRef} reversed={reversed}>
+    <ImperialCellComponent
+      ref={imperialCellRef}
+      reversed={reversed}
+      isScreenSm={isScreenSm}
+    >
       {cell.shouldShowDroppingAnimation && (
         <Box
           position="absolute"

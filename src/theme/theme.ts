@@ -1,5 +1,8 @@
 import { orange } from "@mui/material/colors";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
+import { createBreakpoints } from "@mui/system";
+
+const breakpoints = createBreakpoints({});
 
 declare module "@mui/material/styles" {
   interface Theme {
@@ -69,7 +72,10 @@ let theme = createTheme({
     fontFamily: ["Nunito", "sans-serif"].join(","),
     htmlFontSize: 10,
     score: {
-      fontSize: "4rem",
+      fontSize: "2rem",
+      [breakpoints.up("sm")]: {
+        fontSize: "4rem",
+      },
     },
     dialogBodyTitle: {
       fontSize: "3.2rem",

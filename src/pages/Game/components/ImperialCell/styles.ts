@@ -1,23 +1,47 @@
-import Box from "../FramerMotion/Box";
+import { CELL_BORDER_WIDTH } from "constants/constants";
+
 import { styled } from "@mui/system";
+
+import Box from "../FramerMotion/Box";
 
 interface ImperialCellProps {
   reversed?: boolean;
+  isScreenSm: boolean;
 }
 
-export const ImperialCell = styled(Box)<ImperialCellProps>((props) => {
-  const { reversed, theme } = props;
+export const ImperialCell = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "reversed" && prop !== "isScreenSm",
+})<ImperialCellProps>((props) => {
+  const { isScreenSm, reversed, theme } = props;
+
+  const getBorderTopLeftRadius = () => {
+    if (isScreenSm) return reversed ? "50%" : 0;
+    return reversed ? "50%" : 0;
+  };
+  const getBorderBottomLeftRadius = () => {
+    if (isScreenSm) return reversed ? "50%" : 0;
+    return reversed ? 0 : "50%";
+  };
+  const getBorderTopRightRadius = () => {
+    if (isScreenSm) return reversed ? 0 : "50%";
+    return reversed ? "50%" : 0;
+  };
+  const getBorderBottomRightRadius = () => {
+    if (isScreenSm) return reversed ? 0 : "50%";
+    return reversed ? 0 : "50%";
+  };
+
   return {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
-    padding: reversed ? "96px 6px 96px 6px" : "96px 6px 96px 6px",
-    width: "20%",
-    border: `6px solid ${theme.palette.primary.main}`,
-    borderTopLeftRadius: reversed ? "50%" : 0,
-    borderBottomLeftRadius: reversed ? "50%" : 0,
-    borderTopRightRadius: reversed ? 0 : "50%",
-    borderBottomRightRadius: reversed ? 0 : "50%",
+    padding: isScreenSm ? "96px 6px" : "66px 96px",
+    width: "100%",
+    border: `${CELL_BORDER_WIDTH}px solid ${theme.palette.primary.main}`,
+    borderTopLeftRadius: getBorderTopLeftRadius(),
+    borderBottomLeftRadius: getBorderBottomLeftRadius(),
+    borderTopRightRadius: getBorderTopRightRadius(),
+    borderBottomRightRadius: getBorderBottomRightRadius(),
   };
 });

@@ -1,3 +1,8 @@
+import {
+  CELL_THIN_BORDER_WIDTH,
+  DIRECTIONS,
+  SCORE_ANIMATION_DURATION_S,
+} from "constants/constants";
 import { Variants } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { calculateStonesValue } from "utils/stone";
@@ -8,17 +13,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 
-import {
-  DIRECTIONS,
-  SCORE_ANIMATION_DURATION_S,
-} from "../../../../constants/constants";
-import { useBreakPoints } from "../../../../customHooks/useBreakPoints";
+import { useBreakPoints, useIconSize } from "../../../../customHooks";
 import { getPebbleImage } from "../../../../utils";
 import Box from "../../components/FramerMotion/Box";
 import { VillagerCell as VillagerCellComponent } from "./styles";
 import { getCellVariants, getHandVariants } from "./variants";
 
-import type { Cell, DirectionType } from "../../../../types/types";
+import type { Cell, DirectionType } from "types/types";
 interface VillagerCellProps {
   reversed?: boolean;
   cell: Cell;
@@ -48,6 +49,7 @@ function VillagerCell(props: VillagerCellProps) {
   const { isScreenXs, isScreenSm, isScreenMd, isScreenLg, isScreenXl } =
     useBreakPoints();
   const { palette } = useTheme();
+  const { iconSize, iconWidth } = useIconSize();
 
   const [isHovered, setIsHovered] = useState(false);
   const [isLeftButtonClicked, setIsLeftButtonClicked] = useState(false);
@@ -86,17 +88,14 @@ function VillagerCell(props: VillagerCellProps) {
     }
   };
 
-  const cellVariants = getCellVariants(palette);
+  const cellVariants = getCellVariants(palette, isScreenSm);
 
   const handVariants = useMemo(() => {
-    const BORDER_WIDTH = 6;
-    // HAND_WIDTH will change based on screen's size
-    const HAND_WIDTH = 80;
-    const wholevillagerCellWidth = (villagerCellWidth / 2 + BORDER_WIDTH) * 2;
+    const wholeVillagerCellWidth =
+      (villagerCellWidth / 2 + CELL_THIN_BORDER_WIDTH) * 2;
     // multiply by 2 means getting the width of the whole cell
     // multiply by 100 means the hand will move a distance equals to the cell's width
-    const offsetX = (wholevillagerCellWidth / HAND_WIDTH) * 100;
-    // console.log("villagerCellWidth", villagerCellWidth);
+    const offsetX = (wholeVillagerCellWidth / iconWidth) * 100;
 
     if (isScreenXl) return getHandVariants("Xl", offsetX);
     if (isScreenLg) return getHandVariants("Lg", offsetX);
@@ -173,15 +172,6 @@ function VillagerCell(props: VillagerCellProps) {
     return { duration: SCORE_ANIMATION_DURATION_S };
   };
 
-  const iconSize = useMemo(() => {
-    if (isScreenXl) return "8x";
-    if (isScreenLg) return "7x";
-    if (isScreenMd) return "6x";
-    if (isScreenSm) return "5x";
-    if (isScreenXs) return "4x";
-    return "1x";
-  }, [isScreenXs, isScreenSm, isScreenMd, isScreenLg, isScreenXl]);
-
   useEffect(() => {
     if (!cell.stones.length) {
       setIsLeftButtonClicked(false);
@@ -197,15 +187,9 @@ function VillagerCell(props: VillagerCellProps) {
     };
   }, [cellRef]);
 
-  // if (cell.id === 4) {
-  //   console.log(
-  //     "4 shouldShowDroppingAnimation",
-  //     cell.shouldShowDroppingAnimation
-  //   );
-  // }
-
   return (
     <VillagerCellComponent
+      order={!isScreenSm && cell.id <= 5 ? cell.id + 10 : cell.id}
       reversed={reversed || false}
       isInteractable={isInteractable}
       onClick={handleClickCell}
@@ -214,6 +198,7 @@ function VillagerCell(props: VillagerCellProps) {
         if (isInteractable) setIsHovered(true);
       }}
       onMouseLeave={() => setIsHovered(false)}
+      isScreenSm={isScreenSm}
     >
       {(isSelected || cell.shouldShowDroppingAnimation) && (
         <Box
@@ -280,8 +265,8 @@ function VillagerCell(props: VillagerCellProps) {
 
       <Box
         position="absolute"
-        top="50%"
-        left="0%"
+        top={isScreenSm ? "50%" : "0%"}
+        left={isScreenSm ? "0%" : "50%"}
         display="flex"
         justifyContent="center"
         alignItems="center"
@@ -314,8 +299,8 @@ function VillagerCell(props: VillagerCellProps) {
 
       <Box
         position="absolute"
-        top="50%"
-        right="0%"
+        top={isScreenSm ? "50%" : "0%"}
+        right={isScreenSm ? "0%" : "50%"}
         display="flex"
         justifyContent="center"
         alignItems="center"
