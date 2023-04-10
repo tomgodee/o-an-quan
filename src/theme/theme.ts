@@ -39,14 +39,18 @@ declare module "@mui/material/styles" {
 
   interface TypographyVariants {
     score: React.CSSProperties;
-    dialogBodyTitle: React.CSSProperties;
-    dialogBodyText: React.CSSProperties;
+    endDialogBodyTitle: React.CSSProperties;
+    endDialogBodyText: React.CSSProperties;
+    guideDialogBodyTitle: React.CSSProperties;
+    guideDialogBodyText: React.CSSProperties;
   }
 
   interface TypographyVariantsOptions {
     score?: React.CSSProperties;
-    dialogBodyTitle?: React.CSSProperties;
-    dialogBodyText?: React.CSSProperties;
+    endDialogBodyTitle?: React.CSSProperties;
+    endDialogBodyText?: React.CSSProperties;
+    guideDialogBodyTitle?: React.CSSProperties;
+    guideDialogBodyText?: React.CSSProperties;
   }
 }
 
@@ -62,8 +66,10 @@ declare module "@mui/material/Button" {
 declare module "@mui/material/Typography" {
   interface TypographyPropsVariantOverrides {
     score: true;
-    dialogBodyTitle: true;
-    dialogBodyText: true;
+    endDialogBodyTitle: true;
+    endDialogBodyText: true;
+    guideDialogBodyTitle: true;
+    guideDialogBodyText: true;
   }
 }
 // ff595e-ffca3a-8ac926-1982c4-6a4c93
@@ -76,12 +82,23 @@ let theme = createTheme({
       [breakpoints.up("sm")]: {
         fontSize: "4rem",
       },
+      fontFamily: ["Nunito", "sans-serif"].join(","),
     },
-    dialogBodyTitle: {
+    endDialogBodyTitle: {
       fontSize: "3.2rem",
+      fontFamily: ["Nunito", "sans-serif"].join(","),
     },
-    dialogBodyText: {
+    endDialogBodyText: {
       fontSize: "2.8rem",
+      fontFamily: ["Nunito", "sans-serif"].join(","),
+    },
+    guideDialogBodyTitle: {
+      fontSize: "2rem",
+      fontFamily: ["Nunito", "sans-serif"].join(","),
+    },
+    guideDialogBodyText: {
+      fontSize: "1.6rem",
+      fontFamily: ["Nunito", "sans-serif"].join(","),
     },
   },
   palette: {

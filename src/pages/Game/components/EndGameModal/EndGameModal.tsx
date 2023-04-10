@@ -185,7 +185,7 @@ const EndGameModal = (props: EndGameModalProps) => {
       <Particles id="tsparticles" init={customInit} options={options as any} />
 
       <DialogTitle
-        variant="dialogBodyTitle"
+        variant="endDialogBodyTitle"
         color={palette.secondary.main}
         fontWeight={800}
         textAlign="center"
@@ -216,7 +216,7 @@ const EndGameModal = (props: EndGameModalProps) => {
             <DialogContentText
               color={palette.tertiary.main}
               fontWeight={800}
-              variant="dialogBodyText"
+              variant="endDialogBodyText"
             >
               {player.name}
             </DialogContentText>
@@ -241,7 +241,7 @@ const EndGameModal = (props: EndGameModalProps) => {
             <DialogContentText
               color={palette.quaternary.main}
               fontWeight={800}
-              variant="dialogBodyText"
+              variant="endDialogBodyText"
               px={3}
               py={2}
               textAlign="center"
