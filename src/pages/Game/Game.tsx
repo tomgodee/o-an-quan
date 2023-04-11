@@ -405,6 +405,12 @@ const Game = () => {
     return playerOneScore > playerTwoScore ? playerOne : playerTwo;
   };
 
+  const updatePlayerName = (name: string, isPlayerOne: boolean) => {
+    isPlayerOne
+      ? setPlayerOne((prevState) => ({ ...prevState, name }))
+      : setPlayerTwo((prevState) => ({ ...prevState, name }));
+  };
+
   const boardWidth = useMemo(() => {
     if (isScreenXl) return "50%";
     else if (isScreenLg) return "60%";
@@ -484,6 +490,7 @@ const Game = () => {
           player={playerTwo}
           enabled={!isPlayerOneTurn}
           isPlayerOne={false}
+          updatePlayerName={updatePlayerName}
         />
       </Box>
 
@@ -493,6 +500,7 @@ const Game = () => {
         maxWidth={isScreenSm ? 1920 / 2 : 460}
         flexDirection={isScreenSm ? "row" : "column"}
         alignItems={isScreenSm ? "" : "center"}
+        my={2}
       >
         {cells.length > 11 && (
           <Box
@@ -571,7 +579,12 @@ const Game = () => {
         display="flex"
         justifyContent="center"
       >
-        <PlayerBox player={playerOne} enabled={isPlayerOneTurn} isPlayerOne />
+        <PlayerBox
+          player={playerOne}
+          enabled={isPlayerOneTurn}
+          isPlayerOne
+          updatePlayerName={updatePlayerName}
+        />
       </Box>
 
       <EndGameModal
