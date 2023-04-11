@@ -1,36 +1,100 @@
+import "../index.css";
+
+import React from "react";
+import { Outlet } from "react-router-dom";
+
+import { faMoon, faSun } from "@fortawesome/free-regular-svg-icons";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { PaletteMode } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "@mui/material/styles";
+
+import Box from "../components/FramerMotion/Box";
+import { useBreakPoints } from "../customHooks/useBreakPoints";
+import GuideModal from "../pages/Game/components/GuideModal";
+import getTheme from "../theme";
+
+const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
+
 export default function Root() {
+  const [mode, setMode] = React.useState<PaletteMode>("light");
+  const [isThemeIconHovered, setIsThemeIconHovered] = React.useState(false);
+  const [isGuideModalOpen, setIsGuideModalOpen] = React.useState(false);
+  const [isInfoIconHovered, setIsInfoIconHovered] = React.useState(false);
+  const { isScreenSm } = useBreakPoints();
+
+  const colorMode = React.useMemo(
+    () => ({
+      toggleColorMode: () => {
+        setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
+      },
+    }),
+    []
+  );
+
+  const theme = React.useMemo(() => getTheme(mode), [mode]);
+
   return (
     <>
-      <div id="sidebar">
-        <h1>React Router Contacts</h1>
-        <div>
-          <form id="search-form" role="search">
-            <input
-              id="q"
-              aria-label="Search contacts"
-              placeholder="Search"
-              type="search"
-              name="q"
+      <ColorModeContext.Provider value={colorMode}>
+        <CssBaseline />
+        <ThemeProvider theme={theme}>
+          <Box position="relative" bgcolor={theme.palette.backgroundColor.main}>
+            <Outlet />
+
+            <GuideModal
+              isOpen={isGuideModalOpen}
+              setIsOpen={setIsGuideModalOpen}
             />
-            <div id="search-spinner" aria-hidden hidden={true} />
-            <div className="sr-only" aria-live="polite"></div>
-          </form>
-          <form method="post">
-            <button type="submit">New</button>
-          </form>
-        </div>
-        <nav>
-          <ul>
-            <li>
-              <a href={`/contacts/1`}>Your Name</a>
-            </li>
-            <li>
-              <a href={`/contacts/2`}>Your Friend</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <div id="detail"></div>
+
+            <Box
+              position="absolute"
+              top={isScreenSm ? 30 : 10}
+              right={isScreenSm ? 100 : undefined}
+              left={isScreenSm ? undefined : 10}
+              onClick={() => setIsGuideModalOpen(true)}
+              onMouseOver={() => setIsInfoIconHovered(true)}
+              onMouseLeave={() => setIsInfoIconHovered(false)}
+              p={0.75}
+              borderRadius={2}
+              zIndex={1}
+              sx={{
+                color: isInfoIconHovered
+                  ? theme.palette.iconBold.main
+                  : theme.palette.icon.main,
+                cursor: "pointer",
+              }}
+            >
+              <FontAwesomeIcon icon={faInfoCircle} size={"3x"} />
+            </Box>
+
+            <Box
+              position="absolute"
+              top={isScreenSm ? 30 : 75}
+              right={isScreenSm ? 30 : undefined}
+              left={isScreenSm ? undefined : 10}
+              onClick={() => colorMode.toggleColorMode()}
+              onMouseOver={() => setIsThemeIconHovered(true)}
+              onMouseLeave={() => setIsThemeIconHovered(false)}
+              p={0.75}
+              borderRadius={2}
+              zIndex={1}
+              sx={{
+                color: isThemeIconHovered
+                  ? theme.palette.iconBold.main
+                  : theme.palette.icon.main,
+                cursor: "pointer",
+              }}
+            >
+              <FontAwesomeIcon
+                icon={mode === "light" ? faSun : faMoon}
+                size={"3x"}
+              />
+            </Box>
+          </Box>
+        </ThemeProvider>
+      </ColorModeContext.Provider>
     </>
   );
 }

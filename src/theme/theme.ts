@@ -1,3 +1,4 @@
+import { PaletteMode } from "@mui/material";
 import { orange } from "@mui/material/colors";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { createBreakpoints } from "@mui/system";
@@ -21,6 +22,11 @@ declare module "@mui/material/styles" {
     quaternary: Palette["primary"];
     quinary: Palette["primary"];
     neutral: Palette["primary"];
+    backgroundColor: Palette["primary"];
+    darkerBackgroundColor: Palette["primary"];
+    textColor: Palette["primary"];
+    icon: Palette["primary"];
+    iconBold: Palette["primary"];
   }
 
   interface PaletteOptions {
@@ -28,6 +34,11 @@ declare module "@mui/material/styles" {
     quaternary: PaletteOptions["primary"];
     quinary: PaletteOptions["primary"];
     neutral: PaletteOptions["primary"];
+    backgroundColor: PaletteOptions["primary"];
+    darkerBackgroundColor: PaletteOptions["primary"];
+    textColor: PaletteOptions["primary"];
+    icon: PaletteOptions["primary"];
+    iconBold: PaletteOptions["primary"];
   }
   interface PaletteColor {
     darker?: string;
@@ -60,6 +71,11 @@ declare module "@mui/material/Button" {
     tertiary: true;
     quaternary: true;
     quinary: true;
+    backgroundColor: true;
+    darkerBackgroundColor: true;
+    textColor: true;
+    icon: true;
+    iconBold: true;
   }
 }
 
@@ -72,8 +88,8 @@ declare module "@mui/material/Typography" {
     guideDialogBodyText: true;
   }
 }
-// ff595e-ffca3a-8ac926-1982c4-6a4c93
-let theme = createTheme({
+
+const theme = {
   typography: {
     fontFamily: ["Nunito", "sans-serif"].join(","),
     htmlFontSize: 10,
@@ -99,26 +115,6 @@ let theme = createTheme({
     guideDialogBodyText: {
       fontSize: "1.6rem",
       fontFamily: ["Nunito", "sans-serif"].join(","),
-    },
-  },
-  palette: {
-    primary: {
-      main: "#8ac926",
-    },
-    secondary: {
-      main: "#FF595E",
-    },
-    tertiary: {
-      main: "#1982c4",
-    },
-    quaternary: {
-      main: "#FFCA3A",
-    },
-    quinary: {
-      main: "#6a4c93",
-    },
-    neutral: {
-      main: "#edede9",
     },
   },
   status: {
@@ -159,8 +155,89 @@ let theme = createTheme({
       },
     },
   },
-});
+};
 
-theme = responsiveFontSizes(theme, {});
+const lightPallete = {
+  primary: {
+    main: "#8ac926",
+  },
+  secondary: {
+    main: "#FF595E",
+  },
+  tertiary: {
+    main: "#1982c4",
+  },
+  quaternary: {
+    main: "#FFCA3A",
+  },
+  quinary: {
+    main: "#6a4c93",
+  },
+  neutral: {
+    main: "#edede9",
+  },
+  backgroundColor: {
+    main: "#ffffff",
+  },
+  darkerBackgroundColor: {
+    main: "#ffffffbf",
+  },
+  textColor: {
+    main: "#121212",
+  },
+  icon: {
+    main: "#00000033",
+  },
+  iconBold: {
+    main: "#00000066",
+  },
+};
 
-export { theme };
+const darkPallete = {
+  primary: {
+    main: "#AFD5AA",
+  },
+  secondary: {
+    main: "#AF4319 ",
+  },
+  tertiary: {
+    main: "#EF959C ",
+  },
+  quaternary: {
+    main: "#FDCA40",
+  },
+  quinary: {
+    main: "#7494EA",
+  },
+  neutral: {
+    main: "#EEEEEE",
+  },
+  backgroundColor: {
+    main: "#242325",
+  },
+  darkerBackgroundColor: {
+    main: "#183446",
+  },
+  textColor: {
+    main: "#ffffff",
+  },
+  icon: {
+    main: "#ffffffcc",
+  },
+  iconBold: {
+    main: "#ffffff",
+  },
+};
+
+export const getTheme = (mode: PaletteMode) => {
+  return responsiveFontSizes(
+    createTheme({
+      ...theme,
+      palette: {
+        mode,
+        ...(mode === "light" ? lightPallete : darkPallete),
+      },
+    }),
+    {}
+  );
+};

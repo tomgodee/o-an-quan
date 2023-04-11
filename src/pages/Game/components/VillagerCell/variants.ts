@@ -15,9 +15,6 @@ export const getCellVariants = (palette: Palette, isScreenSm: boolean) => {
       scale: 1.2,
       backgroundPosition: "right",
     },
-    leftButtonWhenNotShownWhileHover: {
-      backgroundPosition: "right",
-    },
     leftButtonVisible: {
       x: isScreenSm ? "-80%" : "-50%",
       y: isScreenSm ? "-70%" : "-70%",
@@ -47,10 +44,6 @@ export const getCellVariants = (palette: Palette, isScreenSm: boolean) => {
     },
     rightButtonWhileHover: {
       scale: 1.2,
-      backgroundPosition: "left",
-      zIndex: 1,
-    },
-    rightButtonWhenNotShownWhileHover: {
       backgroundPosition: "left",
       zIndex: 1,
     },

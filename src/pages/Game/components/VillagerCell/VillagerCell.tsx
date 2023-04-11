@@ -13,9 +13,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 
+import Box from "../../../../components/FramerMotion/Box";
 import { useBreakPoints, useIconSize } from "../../../../customHooks";
 import { getPebbleImage } from "../../../../utils";
-import Box from "../../components/FramerMotion/Box";
 import { VillagerCell as VillagerCellComponent } from "./styles";
 import { getCellVariants, getHandVariants } from "./variants";
 
@@ -54,6 +54,7 @@ function VillagerCell(props: VillagerCellProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isLeftButtonClicked, setIsLeftButtonClicked] = useState(false);
   const [isRightButtonClicked, setIsRightButtonClicked] = useState(false);
+  const [shouldShowButtons, setShouldShowButtons] = useState(false);
   const cellRef = useRef<HTMLDivElement>(null);
 
   const handleResize = () => {
@@ -88,7 +89,9 @@ function VillagerCell(props: VillagerCellProps) {
     }
   };
 
-  const cellVariants = getCellVariants(palette, isScreenSm);
+  const cellVariants = useMemo(() => {
+    return getCellVariants(palette, isScreenSm);
+  }, [palette.mode]);
 
   const handVariants = useMemo(() => {
     const wholeVillagerCellWidth =
@@ -115,14 +118,14 @@ function VillagerCell(props: VillagerCellProps) {
     if (isClicked) return "leftButtonVisible";
     else if (!isClicked && isLeftButtonClicked)
       return "onClickLeftButtonHidden";
-    else if (!isClicked && !isLeftButtonClicked) return "hidden";
+    return undefined;
   };
 
   const animateRightButton = () => {
     if (isClicked) return "rightButtonVisible";
     else if (!isClicked && isRightButtonClicked)
       return "onClickRightButtonHidden";
-    else if (!isClicked && !isRightButtonClicked) return "hidden";
+    return undefined;
   };
 
   const getHandInitial = () => {
@@ -187,6 +190,12 @@ function VillagerCell(props: VillagerCellProps) {
     };
   }, [cellRef]);
 
+  useEffect(() => {
+    if (isClicked) {
+      setShouldShowButtons(true);
+    }
+  }, [isClicked]);
+
   return (
     <VillagerCellComponent
       order={!isScreenSm && cell.id <= 5 ? cell.id + 10 : cell.id}
@@ -210,7 +219,15 @@ function VillagerCell(props: VillagerCellProps) {
           animate={getHandAnimate()}
           transition={getHandDuration()}
         >
-          <FontAwesomeIcon icon={faHand} size={iconSize} />
+          <FontAwesomeIcon
+            icon={faHand}
+            size={iconSize}
+            color={
+              palette.mode === "light"
+                ? palette.textColor.main
+                : palette.icon.main
+            }
+          />
         </Box>
       )}
 
@@ -258,80 +275,97 @@ function VillagerCell(props: VillagerCellProps) {
           transform: "translateX(-50%)",
         }}
       >
-        <Typography fontWeight={700} variant="caption">
+        <Typography
+          fontWeight={700}
+          variant="caption"
+          color={
+            isHovered && palette.mode === "dark"
+              ? palette.backgroundColor.main
+              : palette.textColor.main
+          }
+        >
           {calculateStonesValue(cell.stones)}
         </Typography>
       </Box>
 
-      <Box
-        position="absolute"
-        top={isScreenSm ? "50%" : "0%"}
-        left={isScreenSm ? "0%" : "50%"}
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        width={60}
-        height={60}
-        border={`4px solid ${palette.secondary.main}`}
-        borderRadius="50%"
-        variants={cellVariants}
-        initial="leftButtonInitial"
-        animate={animateLeftButton()}
-        whileHover={
-          isClicked
-            ? "leftButtonWhileHover"
-            : "leftButtonWhenNotShownWhileHover"
-        }
-        transition={{
-          opacity: {
-            duration: 0.5,
-          },
-        }}
-        sx={{
-          cursor: "grab",
-          transition: "background-position 0.25s",
-          zIndex: 1,
-        }}
-        onClick={(event) => handleClickDirectionButtons(event, DIRECTIONS.LEFT)}
-      >
-        <FontAwesomeIcon icon={faCircleLeft} size="2x" />
-      </Box>
+      {shouldShowButtons && (
+        <Box
+          position="absolute"
+          top={isScreenSm ? "50%" : "0%"}
+          left={isScreenSm ? "0%" : "50%"}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          width={60}
+          height={60}
+          border={`4px solid ${palette.secondary.main}`}
+          borderRadius="50%"
+          variants={cellVariants}
+          initial="leftButtonInitial"
+          animate={animateLeftButton()}
+          whileHover="leftButtonWhileHover"
+          transition={{
+            opacity: {
+              duration: 0.5,
+            },
+          }}
+          sx={{
+            cursor: "grab",
+            transition: "background-position 0.25s",
+            zIndex: 1,
+          }}
+          onClick={(event) =>
+            handleClickDirectionButtons(event, DIRECTIONS.LEFT)
+          }
+          onAnimationComplete={(event) => {
+            // the hide-buttons-event has a "scale" property
+            if (event.valueOf().hasOwnProperty("scale")) {
+              setShouldShowButtons(false);
+            }
+          }}
+        >
+          <FontAwesomeIcon icon={faCircleLeft} size="2x" />
+        </Box>
+      )}
 
-      <Box
-        position="absolute"
-        top={isScreenSm ? "50%" : "0%"}
-        right={isScreenSm ? "0%" : "50%"}
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        width={60}
-        height={60}
-        border={`4px solid ${palette.secondary.main}`}
-        borderRadius="50%"
-        variants={cellVariants}
-        initial="rightButtonInitial"
-        animate={animateRightButton()}
-        whileHover={
-          isClicked
-            ? "rightButtonWhileHover"
-            : "rightButtonWhenNotShownWhileHover"
-        }
-        transition={{
-          opacity: {
-            duration: 0.5,
-          },
-        }}
-        sx={{
-          cursor: "grab",
-          transition: "background-position 0.25s",
-          zIndex: 100,
-        }}
-        onClick={(event) =>
-          handleClickDirectionButtons(event, DIRECTIONS.RIGHT)
-        }
-      >
-        <FontAwesomeIcon icon={faCircleRight} size="2x" />
-      </Box>
+      {shouldShowButtons && (
+        <Box
+          position="absolute"
+          top={isScreenSm ? "50%" : "0%"}
+          right={isScreenSm ? "0%" : "50%"}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          width={60}
+          height={60}
+          border={`4px solid ${palette.secondary.main}`}
+          borderRadius="50%"
+          variants={cellVariants}
+          initial="rightButtonInitial"
+          animate={animateRightButton()}
+          whileHover="rightButtonWhileHover"
+          transition={{
+            opacity: {
+              duration: 0.5,
+            },
+          }}
+          sx={{
+            cursor: "grab",
+            transition: "background-position 0.25s",
+            zIndex: 100,
+          }}
+          onClick={(event) =>
+            handleClickDirectionButtons(event, DIRECTIONS.RIGHT)
+          }
+          onAnimationComplete={(event) => {
+            if (event.valueOf().hasOwnProperty("scale")) {
+              setShouldShowButtons(false);
+            }
+          }}
+        >
+          <FontAwesomeIcon icon={faCircleRight} size="2x" />
+        </Box>
+      )}
     </VillagerCellComponent>
   );
 }

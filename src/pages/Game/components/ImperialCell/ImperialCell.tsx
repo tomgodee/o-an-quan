@@ -10,13 +10,14 @@ import { Variants } from "framer-motion";
 import { useEffect, useMemo, useRef } from "react";
 import { calculateStonesValue } from "utils/stone";
 
+import { useTheme } from "@mui/material/styles";
 import { faHand } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Typography from "@mui/material/Typography";
 
 import { useBreakPoints, useIconSize } from "../../../../customHooks";
 import { getPebbleImage } from "../../../../utils";
-import Box from "../FramerMotion/Box";
+import Box from "../../../../components/FramerMotion/Box";
 import { ImperialCell as ImperialCellComponent } from "./styles";
 import { getHandVariants } from "./variants";
 
@@ -45,6 +46,8 @@ const ImperialCell = (props: ImperialCellProps) => {
   } = props;
   const { isScreenXs, isScreenSm, isScreenMd, isScreenLg, isScreenXl } =
     useBreakPoints();
+
+  const { palette } = useTheme();
   const { iconSize, iconWidth } = useIconSize();
   const imperialCellRef = useRef<HTMLDivElement>(null);
 
@@ -175,7 +178,11 @@ const ImperialCell = (props: ImperialCellProps) => {
         right={reversed ? "" : "10px"}
         left={reversed ? "10px" : ""}
       >
-        <Typography fontWeight={700} variant="caption">
+        <Typography
+          fontWeight={700}
+          variant="caption"
+          color={palette.textColor.main}
+        >
           {calculateStonesValue(cell.stones)}
         </Typography>
       </Box>

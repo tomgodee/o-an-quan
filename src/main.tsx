@@ -1,31 +1,22 @@
-import "./index.css";
-
-import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import CssBaseline from "@mui/material/CssBaseline";
-import { ThemeProvider } from "@mui/material/styles";
-
-import App from "./App";
-import ErrorPage from "./components/ErrorPage";
 import Game from "./pages/Game";
 import Leaderboard from "./pages/Leaderboard";
 import Root from "./routes/root";
-import theme from "./theme";
 
 const router = createBrowserRouter([
   {
     path: "/o-an-quan",
-    errorElement: <ErrorPage />,
+    element: <Root />,
     children: [
       {
-        path: "leaderboard",
-        element: <Leaderboard />,
+        path: "/o-an-quan/game",
+        element: <Game />,
       },
       {
-        path: "game",
-        element: <Game />,
+        path: "/o-an-quan/leaderboard",
+        element: <Leaderboard />,
       },
     ],
   },
@@ -33,9 +24,6 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <>
-    <CssBaseline />
-    <ThemeProvider theme={theme}>
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <RouterProvider router={router} />
   </>
 );

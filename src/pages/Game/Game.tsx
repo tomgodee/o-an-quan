@@ -2,9 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { generateRandomName } from "utils/players";
 import { calculateStonesValue, sortStonesByType } from "utils/stone";
 
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import {
   CELL_TYPES,
   DIRECTIONS,
@@ -12,9 +9,8 @@ import {
   STONE_TYPES,
 } from "../../constants/constants";
 import { useBreakPoints } from "../../customHooks/useBreakPoints";
-import Box from "../Game/components/FramerMotion/Box";
+import Box from "../../components/FramerMotion/Box";
 import EndGameModal from "./components/EndGameModal";
-import GuideModal from "./components/GuideModal";
 import ImperialCell from "./components/ImperialCell";
 import PlayerBox from "./components/PlayerBox";
 import VillagerCell from "./components/VillagerCell";
@@ -51,8 +47,6 @@ const Game = () => {
   const [isEndGameModalOpen, setIsEndGameModalOpen] = useState(false);
   const [villagerCellWidth, setVillagerCellWidth] = useState(0);
   const [imperialCellWidth, setImperialCellWidth] = useState(0);
-  const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
-  const [isInfoIconHovered, setIsInfoIconHovered] = useState(false);
 
   const initGame = () => {
     const villagerStones = createVillagerStones();
@@ -585,27 +579,6 @@ const Game = () => {
         player={getWinner()}
         initGame={initGame}
       />
-
-      <GuideModal isOpen={isGuideModalOpen} setIsOpen={setIsGuideModalOpen} />
-
-      <Box
-        position="absolute"
-        top={30}
-        right={30}
-        onClick={() => setIsGuideModalOpen(true)}
-        onMouseOver={() => setIsInfoIconHovered(true)}
-        onMouseLeave={() => setIsInfoIconHovered(false)}
-        p={0.75}
-        borderRadius={2}
-        sx={{
-          color: isInfoIconHovered
-            ? "rgba(0, 0, 0, 0.4)"
-            : "rgba(0, 0, 0, 0.2)",
-          cursor: "pointer",
-        }}
-      >
-        <FontAwesomeIcon icon={faInfoCircle} size={"3x"} />
-      </Box>
     </Box>
   );
 };

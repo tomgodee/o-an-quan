@@ -1,3 +1,3 @@
-import { theme } from "./theme";
+import { getTheme } from "./theme";
 
-export default theme;
+export default getTheme;

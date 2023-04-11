@@ -6,9 +6,9 @@ import { useEffect, useMemo, useState } from "react";
 import { Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
+import Box from "../../../../components/FramerMotion/Box";
 import { SCORE_ANIMATION_DURATION_S } from "../../../../constants/constants";
 import { useBreakPoints } from "../../../../customHooks";
-import Box from "../FramerMotion/Box";
 
 import type { Stone, Player } from "../../../../types/types";
 
@@ -52,11 +52,13 @@ const PlayerBox = (props: PlayerBoxProps) => {
       alignItems={!isScreenSm ? "center" : ""}
       justifyContent={isScreenSm ? "center" : "space-between"}
       width="100%"
-      mr={!isScreenSm ? (isPlayerOne ? 6 : 0) : 0}
-      ml={!isScreenSm ? (isPlayerOne ? 0 : 6) : 0}
+      mr={!isScreenSm ? (isPlayerOne ? 8 : 0) : 0}
+      ml={!isScreenSm ? (isPlayerOne ? 0 : 8) : 0}
     >
       <Box
-        className={enabled ? "rainbow" : ""}
+        className={
+          enabled ? (palette.mode === "dark" ? "rainbow-dark" : "rainbow") : ""
+        }
         border={!enabled ? `6px solid ${palette.grey[400]}` : ""}
         minWidth={120}
       >
@@ -79,7 +81,7 @@ const PlayerBox = (props: PlayerBoxProps) => {
       >
         <Typography
           textAlign="center"
-          color={enabled ? palette.secondary.main : palette.grey[600]}
+          color={enabled ? palette.textColor.main : palette.grey[600]}
         >
           {player.name}
         </Typography>

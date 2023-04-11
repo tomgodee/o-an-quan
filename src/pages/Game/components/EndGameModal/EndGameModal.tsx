@@ -9,9 +9,9 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useTheme } from "@mui/material/styles";
 
-import Box from "../FramerMotion/Box";
-import DialogActions from "../FramerMotion/DialogActions";
-import DialogContent from "../FramerMotion/DialogContent";
+import Box from "../../../../components/FramerMotion/Box";
+import DialogActions from "../../../../components/FramerMotion/DialogActions";
+import DialogContent from "../../../../components/FramerMotion/DialogContent";
 
 import type { Player } from "types/types";
 import type { Engine } from "tsparticles-engine";

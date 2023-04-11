@@ -2,7 +2,7 @@ import { CELL_BORDER_WIDTH, CELL_THIN_BORDER_WIDTH } from "constants/constants";
 
 import { styled } from "@mui/system";
 
-import Box from "../FramerMotion/Box";
+import Box from "../../../../components/FramerMotion/Box";
 
 interface VillagerCellProps {
   reversed: boolean;
@@ -51,6 +51,7 @@ export const VillagerCell = styled(Box, {
     alignItems: "flex-end",
     position: "relative",
     padding: 16,
+    backgroundColor: theme.palette.darkerBackgroundColor.main,
     borderColor: theme.palette.primary.main,
     borderStyle: "solid",
     borderTopWidth: getBorderTopWidth(),

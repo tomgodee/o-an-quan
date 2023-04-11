@@ -25,4 +25,19 @@
     background: rgba(255, 255, 255, 0.5);
     animation: rotate 4s linear infinite;
   }
+
+  .rainbow-dark {
+    display: flex;
+    border: 6px solid transparent;
+    border-image: conic-gradient(
+        from var(--angle),
+        #af4319 0deg 90deg,
+        #afd5aa 90deg 180deg,
+        #fdca40 180deg 270deg,
+        #ef959c 270deg 360deg
+      )
+      1 stretch;
+    background: #eeeeee;
+    animation: rotate 4s linear infinite;
+  }
 }

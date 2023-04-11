@@ -2,7 +2,7 @@ import { CELL_BORDER_WIDTH } from "constants/constants";
 
 import { styled } from "@mui/system";
 
-import Box from "../FramerMotion/Box";
+import Box from "../../../../components/FramerMotion/Box";
 
 interface ImperialCellProps {
   reversed?: boolean;
@@ -38,6 +38,7 @@ export const ImperialCell = styled(Box, {
     position: "relative",
     padding: isScreenSm ? "96px 6px" : "66px 96px",
     width: "100%",
+    backgroundColor: theme.palette.darkerBackgroundColor.main,
     border: `${CELL_BORDER_WIDTH}px solid ${theme.palette.primary.main}`,
     borderTopLeftRadius: getBorderTopLeftRadius(),
     borderBottomLeftRadius: getBorderBottomLeftRadius(),
