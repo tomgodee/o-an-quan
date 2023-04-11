@@ -91,7 +91,7 @@ function VillagerCell(props: VillagerCellProps) {
 
   const cellVariants = useMemo(() => {
     return getCellVariants(palette, isScreenSm);
-  }, [palette.mode]);
+  }, [palette.mode, isScreenSm]);
 
   const handVariants = useMemo(() => {
     const wholeVillagerCellWidth =

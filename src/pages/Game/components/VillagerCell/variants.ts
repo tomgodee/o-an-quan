@@ -84,22 +84,22 @@ export const getHandVariants = (screenSize: string, offsetX: number) => {
         opacity: [null, 1, 1, 0],
       },
       gettingStonesHandTopRightAnimate: {
-        x: ["0%", "0%", "-103.25%", "-103.25%"],
+        x: ["0%", "0%", "-89%", "-89%"],
         y: [null, "10%", "90%", "90%"],
         opacity: [null, 1, 1, 0],
       },
       gettingStonesHandBottomRightAnimate: {
-        x: ["0%", "0%", "103.25%", "103.25%"],
+        x: ["0%", "0%", "89%", "89%"],
         y: [null, "10%", "90%", "90%"],
         opacity: [null, 1, 1, 0],
       },
       gettingStonesHandTopLeftAnimate: {
-        x: ["0%", "0%", "-103.25%", "-103.25%"],
+        x: ["0%", "0%", "-89%", "-89%"],
         y: [null, "10%", "-120%", "-120%"],
         opacity: [null, 1, 1, 0],
       },
       gettingStonesHandBottomLeftAnimate: {
-        x: ["0%", "0%", "103.25%", "103.25%"],
+        x: ["0%", "0%", "89%", "89%"],
         y: [null, "10%", "-120%", "-120%"],
         opacity: [null, 1, 1, 0],
       },
@@ -116,19 +116,19 @@ export const getHandVariants = (screenSize: string, offsetX: number) => {
         y: "135%",
       },
       droppingStoneHandTopRightAnimate: {
-        x: "-103.25%",
+        x: "-89%",
         y: "90%",
       },
       droppingStoneHandBottomRightAnimate: {
-        x: "103.25%",
+        x: "89%",
         y: "90%",
       },
       droppingStoneHandTopLeftAnimate: {
-        x: "-103.25%",
+        x: "-89%",
         y: "-120%",
       },
       droppingStoneHandBottomLeftAnimate: {
-        x: "103.25%",
+        x: "89%",
         y: "-120%",
       },
     };
@@ -157,7 +157,7 @@ export const getHandVariants = (screenSize: string, offsetX: number) => {
     },
     gettingStonesHandBottomRightAnimate: {
       x: [null, "0%", `${offsetX}%`, `${offsetX}%`],
-      y: [null, "20%", "-54%", "-54%"],
+      y: [null, "20%", "-53.875%", "-53.875%"],
       opacity: [null, 1, 1, 0],
     },
     gettingStonesHandTopLeftAnimate: {
@@ -167,7 +167,7 @@ export const getHandVariants = (screenSize: string, offsetX: number) => {
     },
     gettingStonesHandBottomLeftAnimate: {
       x: [null, "0%", `-${offsetX}%`, `-${offsetX}%`],
-      y: [null, "20%", "-54%", "-54%"],
+      y: [null, "20%", "-53.875%", "-53.875%"],
       opacity: [null, 1, 1, 0],
     },
     droppingStoneHandInitial: {
@@ -187,7 +187,7 @@ export const getHandVariants = (screenSize: string, offsetX: number) => {
     },
     droppingStoneHandBottomRightAnimate: {
       x: `${offsetX}%`,
-      y: "-54%",
+      y: "-53.875%",
     },
     droppingStoneHandTopLeftAnimate: {
       x: `-${offsetX}%`,
@@ -195,7 +195,7 @@ export const getHandVariants = (screenSize: string, offsetX: number) => {
     },
     droppingStoneHandBottomLeftAnimate: {
       x: `-${offsetX}%`,
-      y: "-54%",
+      y: "-53.875%",
     },
   };
 };

@@ -463,6 +463,7 @@ const Game = () => {
         setLastTouchedVillagerCell(winningCell);
       }
 
+      // TODO: There's rare case where thirdInLineCell is undefined
       if (thirdInLineCell.stones?.length > 0) {
         endTurn();
       } else {

@@ -63,8 +63,8 @@ const ImperialCell = (props: ImperialCellProps) => {
       villagerCellWidth / 2 + CELL_THIN_BORDER_WIDTH;
 
     const offsetXInitial =
-      ((halfImperialCellWidth - halfVillagerCellWidth) /
-        halfImperialCellWidth) *
+      ((imperialCellWidth / 2 - (halfVillagerCellWidth - CELL_BORDER_WIDTH)) /
+        iconWidth) *
       100;
 
     const offsetXAnimate =
@@ -144,7 +144,15 @@ const ImperialCell = (props: ImperialCellProps) => {
           animate={getHandAnimate()}
           transition={getHandDuration()}
         >
-          <FontAwesomeIcon icon={faHand} size={iconSize} />
+          <FontAwesomeIcon
+            icon={faHand}
+            size={iconSize}
+            color={
+              palette.mode === "light"
+                ? palette.textColor.main
+                : palette.icon.main
+            }
+          />
         </Box>
       )}
       <Box position="absolute" width="80%" height="80%">

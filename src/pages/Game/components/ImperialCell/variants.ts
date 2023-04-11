@@ -1,5 +1,3 @@
-import { Palette } from "@mui/material";
-
 export const getHandVariants = (
   screenSize: string,
   offsetXInitial: number,
@@ -16,19 +14,19 @@ export const getHandVariants = (
         y: "100%",
       },
       droppingStoneHandTopRightAnimate: {
-        x: "-103.25%",
+        x: "-89%",
         y: "-120%",
       },
       droppingStoneHandBottomRightAnimate: {
-        x: "103.25%",
+        x: "89%",
         y: "-120%",
       },
       droppingStoneHandTopLeftAnimate: {
-        x: "-103.25%",
+        x: "-89%",
         y: "231%",
       },
       droppingStoneHandBottomLeftAnimate: {
-        x: "103.25%",
+        x: "89%",
         y: "231%",
       },
     };
