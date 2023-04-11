@@ -1,8 +1,7 @@
-import { CELL_BORDER_WIDTH, CELL_THIN_BORDER_WIDTH } from "constants/constants";
+import Box from "components/FramerMotion/Box";
+import { CELL_BORDER_WIDTH, CELL_THIN_BORDER_WIDTH } from "constants";
 
 import { styled } from "@mui/system";
-
-import Box from "../../../../components/FramerMotion/Box";
 
 interface VillagerCellProps {
   reversed: boolean;

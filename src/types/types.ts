@@ -1,9 +1,4 @@
-import {
-  CELL_TYPES,
-  DIRECTIONS,
-  STONE_TYPES,
-  STONE_VALUES,
-} from "../constants/constants";
+import { CELL_TYPES, DIRECTIONS, STONE_TYPES, STONE_VALUES } from "constants";
 
 export interface Stone {
   id: number;

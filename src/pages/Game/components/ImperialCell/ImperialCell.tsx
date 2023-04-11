@@ -1,27 +1,28 @@
 import stoneIcon from "assets/stone.png";
+import Box from "components/FramerMotion/Box";
 import {
   CELL_BORDER_WIDTH,
   CELL_THIN_BORDER_WIDTH,
   DIRECTIONS,
   SCORE_ANIMATION_DURATION_S,
   STONE_TYPES,
-} from "constants/constants";
+} from "constants";
+import { useBreakPoints, useIconSize } from "customHooks";
 import { Variants } from "framer-motion";
 import { useEffect, useMemo, useRef } from "react";
+import { getPebbleImage } from "utils";
 import { calculateStonesValue } from "utils/stone";
 
-import { useTheme } from "@mui/material/styles";
 import { faHand } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 
-import { useBreakPoints, useIconSize } from "../../../../customHooks";
-import { getPebbleImage } from "../../../../utils";
-import Box from "../../../../components/FramerMotion/Box";
 import { ImperialCell as ImperialCellComponent } from "./styles";
 import { getHandVariants } from "./variants";
 
 import type { Cell, DirectionType, Stone } from "types/types";
+
 interface ImperialCellProps {
   reversed?: boolean;
   cell: Cell;

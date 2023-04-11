@@ -1,10 +1,13 @@
+import Box from "components/FramerMotion/Box";
 import {
   CELL_THIN_BORDER_WIDTH,
   DIRECTIONS,
   SCORE_ANIMATION_DURATION_S,
-} from "constants/constants";
+} from "constants";
+import { useBreakPoints, useIconSize } from "customHooks";
 import { Variants } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { getPebbleImage } from "utils";
 import { calculateStonesValue } from "utils/stone";
 
 import { faHand } from "@fortawesome/free-regular-svg-icons";
@@ -13,13 +16,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 
-import Box from "../../../../components/FramerMotion/Box";
-import { useBreakPoints, useIconSize } from "../../../../customHooks";
-import { getPebbleImage } from "../../../../utils";
 import { VillagerCell as VillagerCellComponent } from "./styles";
 import { getCellVariants, getHandVariants } from "./variants";
 
 import type { Cell, DirectionType } from "types/types";
+
 interface VillagerCellProps {
   reversed?: boolean;
   cell: Cell;

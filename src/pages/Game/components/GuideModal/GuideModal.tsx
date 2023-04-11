@@ -5,8 +5,8 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 
-import DialogActions from "../../../../components/FramerMotion/DialogActions";
-import DialogContent from "../../../../components/FramerMotion/DialogContent";
+import DialogActions from "components/FramerMotion/DialogActions";
+import DialogContent from "components/FramerMotion/DialogContent";
 
 interface GuideModalProps {
   isOpen: boolean;

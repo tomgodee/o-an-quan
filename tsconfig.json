@@ -21,13 +21,16 @@
     "paths": {
       "assets/*": ["./src/assets/*"],
       "constants/*": ["./src/constants/*"],
+      "constants": ["./src/constants/index"],
       "components/*": ["./src/components/*"],
       "customHooks/*": ["./src/customHooks/*"],
+      "customHooks": ["./src/customHooks/index"],
       "pages/*": ["./src/pages/*"],
       "routes/*": ["./src/routes/*"],
       "theme/*": ["./src/theme/*"],
       "types/*": ["./src/types/*"],
-      "utils/*": ["./src/utils/*"]
+      "utils/*": ["./src/utils/*"],
+      "utils": ["./src/utils/index"]
     }
   },
   "include": ["src"],

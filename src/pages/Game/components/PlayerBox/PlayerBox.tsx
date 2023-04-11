@@ -1,5 +1,8 @@
 import "./style.css";
 
+import Box from "components/FramerMotion/Box";
+import { SCORE_ANIMATION_DURATION_S } from "constants";
+import { useBreakPoints } from "customHooks";
 import { animate } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import { generateRandomName } from "utils/players";
@@ -9,11 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 
-import Box from "../../../../components/FramerMotion/Box";
-import { SCORE_ANIMATION_DURATION_S } from "../../../../constants/constants";
-import { useBreakPoints } from "../../../../customHooks";
-
-import type { Stone, Player } from "../../../../types/types";
+import type { Stone, Player } from "types/types";
 
 interface PlayerBoxProps {
   player: Player;

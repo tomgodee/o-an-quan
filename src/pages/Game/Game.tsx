@@ -1,22 +1,22 @@
-import { useEffect, useMemo, useState } from "react";
-import { generateRandomName } from "utils/players";
-import { calculateStonesValue, sortStonesByType } from "utils/stone";
-
+import Box from "components/FramerMotion/Box";
 import {
   CELL_TYPES,
   DIRECTIONS,
   SCORE_ANIMATION_DURATION_MS,
   STONE_TYPES,
-} from "../../constants/constants";
-import { useBreakPoints } from "../../customHooks/useBreakPoints";
-import Box from "../../components/FramerMotion/Box";
+} from "constants";
+import { useBreakPoints } from "customHooks/useBreakPoints";
+import { useEffect, useMemo, useState } from "react";
+import { generateRandomName } from "utils/players";
+import { calculateStonesValue, sortStonesByType } from "utils/stone";
+
 import EndGameModal from "./components/EndGameModal";
 import ImperialCell from "./components/ImperialCell";
 import PlayerBox from "./components/PlayerBox";
 import VillagerCell from "./components/VillagerCell";
 import { createImperialStones, createVillagerStones } from "./database";
 
-import type { Cell, DirectionType, Player, Stone } from "../../types/types";
+import type { Cell, DirectionType, Player, Stone } from "types/types";
 const MINIMUM_RESEEDING_STONES_COUNT = 5;
 
 const Game = () => {

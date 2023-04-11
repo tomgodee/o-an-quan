@@ -10,9 +10,9 @@ import { PaletteMode } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 
-import Box from "../components/FramerMotion/Box";
-import { useBreakPoints } from "../customHooks/useBreakPoints";
-import GuideModal from "../pages/Game/components/GuideModal";
+import Box from "components/FramerMotion/Box";
+import { useBreakPoints } from "customHooks/useBreakPoints";
+import GuideModal from "pages/Game/components/GuideModal";
 import getTheme from "../theme";
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });

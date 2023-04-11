@@ -1,11 +1,6 @@
-import type { Cell, Stone, DirectionType, Player } from "../../types/types";
+import type { Stone } from "../../types/types";
 
-import {
-  CELL_TYPES,
-  DIRECTIONS,
-  STONE_TYPES,
-  STONE_VALUES,
-} from "../../constants/constants";
+import { STONE_TYPES, STONE_VALUES } from "constants";
 
 export const createVillagerStones = (): Stone[] => {
   const villagerStones: Stone[] = [];
