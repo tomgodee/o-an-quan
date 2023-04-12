@@ -7,15 +7,15 @@ import Root from "./routes/root";
 
 const router = createBrowserRouter([
   {
-    path: "/o-an-quan",
+    path: "/",
     element: <Root />,
     children: [
       {
-        path: "/o-an-quan/game",
+        path: "game",
         element: <Game />,
       },
       {
-        path: "/o-an-quan/leaderboard",
+        path: "leaderboard",
         element: <Leaderboard />,
       },
     ],
