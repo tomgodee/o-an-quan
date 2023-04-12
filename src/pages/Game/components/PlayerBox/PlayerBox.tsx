@@ -1,4 +1,4 @@
-import "./style.css";
+import "./style.scss";
 
 import Box from "components/FramerMotion/Box";
 import { SCORE_ANIMATION_DURATION_S } from "constants";
@@ -67,10 +67,12 @@ const PlayerBox = (props: PlayerBoxProps) => {
         className={
           enabled ? (palette.mode === "dark" ? "rainbow-dark" : "rainbow") : ""
         }
-        border={!enabled ? `6px solid ${palette.grey[400]}` : ""}
         minWidth={120}
+        border={!enabled ? `6px solid ${palette.grey[400]}` : ""}
+        borderRadius={2}
+        p={enabled ? 3 : 2}
       >
-        <Box width="100%" py={2} display="flex" justifyContent="center">
+        <Box width="100%" display="flex" justifyContent="center">
           <Typography
             variant="score"
             fontWeight={700}
