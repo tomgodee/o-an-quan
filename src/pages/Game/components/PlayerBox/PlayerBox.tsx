@@ -70,7 +70,7 @@ const PlayerBox = (props: PlayerBoxProps) => {
         minWidth={120}
         border={!enabled ? `6px solid ${palette.grey[400]}` : ""}
         borderRadius={2}
-        p={enabled ? 3 : 2}
+        p={enabled ? 3 : 2.25}
       >
         <Box width="100%" display="flex" justifyContent="center">
           <Typography

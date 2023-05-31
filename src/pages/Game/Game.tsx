@@ -479,7 +479,7 @@ const Game = () => {
       width="100%"
       alignItems="center"
       justifyContent={isScreenSm ? "space-around" : "space-between"}
-      height="100vh"
+      height={isScreenSm ? "100vh" : "100%"}
       position="relative"
     >
       <Box
