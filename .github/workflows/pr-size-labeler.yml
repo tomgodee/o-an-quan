@@ -37,7 +37,7 @@ jobs:
             'seeder/_generated/*'
             'server/hasura/*'
             'shopify/generated/*'
-            'web/src/generated/*'
+            'web/src/generated/**'
             'server/actions/src/generated/*'
             'server/actions/src/gqlSchemas/*'
             'shared/src/gql/graphql.ts'
