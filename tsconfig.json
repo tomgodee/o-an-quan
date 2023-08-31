@@ -33,6 +33,6 @@
       "utils": ["./src/utils/index"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "web"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
