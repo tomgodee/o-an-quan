@@ -17,4 +17,5 @@ labels:
       below: 1000
   - label: "size/xl"
     size:
+      exclude-files: ["graphql.ts"]
       above: 999
