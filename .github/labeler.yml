@@ -1,12 +1,12 @@
 version: 1
 labels:
-  - label: "S"
+  - label: "size/s"
     size:
       below: 10
-  - label: "M"
+  - label: "size/m"
     size:
       above: 9
       below: 100
-  - label: "L"
+  - label: "size/l"
     size:
       above: 99
