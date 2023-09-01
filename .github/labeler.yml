@@ -18,4 +18,4 @@ labels:
   - label: "size/xl"
     size:
       above: 999
-      # exclude-files: ["graphql.ts"]
+      exclude-files: ["web/src/generated/*"]
