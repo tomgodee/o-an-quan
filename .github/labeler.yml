@@ -17,5 +17,5 @@ labels:
       below: 1000
   - label: "size/xl"
     size:
-      exclude-files: ["web/src/generated/*"]
+      exclude-files: ["a/web/src/generated/*", b/web/src/generated/*]
       above: 999
