@@ -20,3 +20,4 @@ labels:
       exclude-files:
         ["web/src/generated/graphql.ts", "web/src/generated/test/graphql.ts"]
       above: 999
+      below: 100000
