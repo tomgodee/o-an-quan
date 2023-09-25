@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
-    # steps:
-    # - uses: srvaroa/labeler@master
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: srvaroa/labeler@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
