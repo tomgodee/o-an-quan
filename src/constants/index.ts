@@ -26,3 +26,4 @@ export const CELL_THIN_BORDER_WIDTH = 3;
 
 export const a = 1;
 export const b = 1;
+export const c = 1;
