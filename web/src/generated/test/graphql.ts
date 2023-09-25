@@ -2192,3 +2192,333 @@ baseOptions?: Apollo.MutationHookOptions<
   SalesOrdersCommandMutation,
   SalesOrdersCommandMutationVariables
 >
+query GetTags($storeId: uuid_comparison_exp) {
+  tags(where: { store_id: $storeId }) {
+    id
+    name
+    store_id
+  }
+}
+`;
+
+/**
+* __useGetTagsQuery__
+*
+* To run a query within a React component, call `useGetTagsQuery` and pass it any options that fit your needs.
+* When your component renders, `useGetTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+* you can use to render your UI.
+*
+* @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+*
+* @example
+* const { data, loading, error } = useGetTagsQuery({
+*   variables: {
+*      storeId: // value for 'storeId'
+*   },
+* });
+*/
+export function useGetTagsQuery(
+baseOptions?: Apollo.QueryHookOptions<GetTagsQuery, GetTagsQueryVariables>
+) {
+const options = { ...defaultOptions, ...baseOptions };
+return Apollo.useQuery<GetTagsQuery, GetTagsQueryVariables>(
+  GetTagsDocument,
+  options
+);
+}
+export function useGetTagsLazyQuery(
+baseOptions?: Apollo.LazyQueryHookOptions<GetTagsQuery, GetTagsQueryVariables>
+) {
+const options = { ...defaultOptions, ...baseOptions };
+return Apollo.useLazyQuery<GetTagsQuery, GetTagsQueryVariables>(
+  GetTagsDocument,
+  options
+);
+}
+export type GetTagsQueryHookResult = ReturnType<typeof useGetTagsQuery>;
+export type GetTagsLazyQueryHookResult = ReturnType<typeof useGetTagsLazyQuery>;
+export type GetTagsQueryResult = Apollo.QueryResult<
+GetTagsQuery,
+GetTagsQueryVariables
+>;
+export const GetDetailsForBulkBookingDocument = gql`
+query GetDetailsForBulkBooking($ids: [uuid!]) {
+  salesOrders: sales_orders(
+    where: {
+      _and: {
+        fulfilment_shipments: { status: { _eq: DRAFT } }
+        id: { _in: $ids }
+      }
+    }
+  ) {
+    id
+    fulfilmentShipments: fulfilment_shipments(
+      where: { status: { _eq: DRAFT } }
+    ) {
+      ...BulkActionFulfilmentShipment
+    }
+  }
+}
+${BulkActionFulfilmentShipmentFragmentDoc}
+`;
+
+/**
+* __useGetDetailsForBulkBookingQuery__
+*
+* To run a query within a React component, call `useGetDetailsForBulkBookingQuery` and pass it any options that fit your needs.
+* When your component renders, `useGetDetailsForBulkBookingQuery` returns an object from Apollo Client that contains loading, error, and data properties
+* you can use to render your UI.
+*
+* @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+*
+* @example
+* const { data, loading, error } = useGetDetailsForBulkBookingQuery({
+*   variables: {
+*      ids: // value for 'ids'
+*   },
+* });
+*/
+export function useGetDetailsForBulkBookingQuery(
+baseOptions?: Apollo.QueryHookOptions<
+  GetDetailsForBulkBookingQuery,
+  GetDetailsForBulkBookingQueryVariables
+>
+) {
+const options = { ...defaultOptions, ...baseOptions };
+return Apollo.useQuery<
+  GetDetailsForBulkBookingQuery,
+  GetDetailsForBulkBookingQueryVariables
+>(GetDetailsForBulkBookingDocument, options);
+}
+export function useGetDetailsForBulkBookingLazyQuery(
+baseOptions?: Apollo.LazyQueryHookOptions<
+  GetDetailsForBulkBookingQuery,
+  GetDetailsForBulkBookingQueryVariables
+>
+) {
+const options = { ...defaultOptions, ...baseOptions };
+return Apollo.useLazyQuery<
+  GetDetailsForBulkBookingQuery,
+  GetDetailsForBulkBookingQueryVariables
+>(GetDetailsForBulkBookingDocument, options);
+}
+export type GetDetailsForBulkBookingQueryHookResult = ReturnType<
+typeof useGetDetailsForBulkBookingQuery
+>;
+export type GetDetailsForBulkBookingLazyQueryHookResult = ReturnType<
+typeof useGetDetailsForBulkBookingLazyQuery
+>;
+export type GetDetailsForBulkBookingQueryResult = Apollo.QueryResult<
+GetDetailsForBulkBookingQuery,
+GetDetailsForBulkBookingQueryVariables
+>;
+export const GetDetailsForBulkCancellingDocument = gql`
+query GetDetailsForBulkCancelling($ids: [uuid!]) {
+  salesOrders: sales_orders(
+    where: {
+      _and: {
+        fulfilment_shipments: {
+          source: { _neq: EXTERNAL }
+          status: { _eq: UNSENT }
+        }
+        id: { _in: $ids }
+      }
+    }
+  ) {
+    id
+    fulfilmentShipments: fulfilment_shipments(
+      where: { source: { _neq: EXTERNAL }, status: { _eq: UNSENT } }
+    ) {
+      ...BulkActionFulfilmentShipment
+    }
+  }
+}
+${BulkActionFulfilmentShipmentFragmentDoc}
+`;
+
+/**
+* __useGetDetailsForBulkCancellingQuery__
+*
+* To run a query within a React component, call `useGetDetailsForBulkCancellingQuery` and pass it any options that fit your needs.
+* When your component renders, `useGetDetailsForBulkCancellingQuery` returns an object from Apollo Client that contains loading, error, and data properties
+* you can use to render your UI.
+*
+* @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+*
+* @example
+* const { data, loading, error } = useGetDetailsForBulkCancellingQuery({
+*   variables: {
+*      ids: // value for 'ids'
+*   },
+* });
+*/
+export function useGetDetailsForBulkCancellingQuery(
+baseOptions?: Apollo.QueryHookOptions<
+  GetDetailsForBulkCancellingQuery,
+  GetDetailsForBulkCancellingQueryVariables
+>
+) {
+const options = { ...defaultOptions, ...baseOptions };
+return Apollo.useQuery<
+  GetDetailsForBulkCancellingQuery,
+  GetDetailsForBulkCancellingQueryVariables
+>(GetDetailsForBulkCancellingDocument, options);
+}
+export function useGetDetailsForBulkCancellingLazyQuery(
+baseOptions?: Apollo.LazyQueryHookOptions<
+  GetDetailsForBulkCancellingQuery,
+  GetDetailsForBulkCancellingQueryVariables
+>
+) {
+const options = { ...defaultOptions, ...baseOptions };
+return Apollo.useLazyQuery<
+  GetDetailsForBulkCancellingQuery,
+  GetDetailsForBulkCancellingQueryVariables
+>(GetDetailsForBulkCancellingDocument, options);
+}
+export type GetDetailsForBulkCancellingQueryHookResult = ReturnType<
+typeof useGetDetailsForBulkCancellingQuery
+>;
+export type GetDetailsForBulkCancellingLazyQueryHookResult = ReturnType<
+typeof useGetDetailsForBulkCancellingLazyQuery
+>;
+export type GetDetailsForBulkCancellingQueryResult = Apollo.QueryResult<
+GetDetailsForBulkCancellingQuery,
+GetDetailsForBulkCancellingQueryVariables
+>;
+export const OnSalesOrderRatesUpdatedDocument = gql`
+subscription OnSalesOrderRatesUpdated($salesOrderId: uuid!) {
+  salesOrder: sales_orders_by_pk(id: $salesOrderId) {
+    id
+    ...SalesOrderDraftFulfilmentShipmentWithRates
+  }
+}
+${SalesOrderDraftFulfilmentShipmentWithRatesFragmentDoc}
+`;
+
+/**
+* __useOnSalesOrderRatesUpdatedSubscription__
+*
+* To run a query within a React component, call `useOnSalesOrderRatesUpdatedSubscription` and pass it any options that fit your needs.
+* When your component renders, `useOnSalesOrderRatesUpdatedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+* you can use to render your UI.
+*
+* @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+*
+* @example
+* const { data, loading, error } = useOnSalesOrderRatesUpdatedSubscription({
+*   variables: {
+*      salesOrderId: // value for 'salesOrderId'
+*   },
+* });
+*/
+export function useOnSalesOrderRatesUpdatedSubscription(
+baseOptions: Apollo.SubscriptionHookOptions<
+  OnSalesOrderRatesUpdatedSubscription,
+  OnSalesOrderRatesUpdatedSubscriptionVariables
+>
+) {
+const options = { ...defaultOptions, ...baseOptions };
+return Apollo.useSubscription<
+  OnSalesOrderRatesUpdatedSubscription,
+  OnSalesOrderRatesUpdatedSubscriptionVariables
+>(OnSalesOrderRatesUpdatedDocument, options);
+}
+export type OnSalesOrderRatesUpdatedSubscriptionHookResult = ReturnType<
+typeof useOnSalesOrderRatesUpdatedSubscription
+>;
+export type OnSalesOrderRatesUpdatedSubscriptionResult =
+Apollo.SubscriptionResult<OnSalesOrderRatesUpdatedSubscription>;
+export const SalesOrderCommandDocument = gql`
+mutation SalesOrderCommand($command: SalesOrderCommand!, $storeId: uuid!) {
+  handleSalesOrderCommand: command_sales_order(
+    command: $command
+    storeId: $storeId
+  ) {
+    outcome
+    error
+    salesOrderId
+  }
+}
+`;
+export type SalesOrderCommandMutationFn = Apollo.MutationFunction<
+SalesOrderCommandMutation,
+SalesOrderCommandMutationVariables
+>;
+
+/**
+* __useSalesOrderCommandMutation__
+*
+* To run a mutation, you first call `useSalesOrderCommandMutation` within a React component and pass it any options that fit your needs.
+* When your component renders, `useSalesOrderCommandMutation` returns a tuple that includes:
+* - A mutate function that you can call at any time to execute the mutation
+* - An object with fields that represent the current status of the mutation's execution
+*
+* @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+*
+* @example
+* const [salesOrderCommandMutation, { data, loading, error }] = useSalesOrderCommandMutation({
+*   variables: {
+*      command: // value for 'command'
+*      storeId: // value for 'storeId'
+*   },
+* });
+*/
+export function useSalesOrderCommandMutation(
+baseOptions?: Apollo.MutationHookOptions<
+  SalesOrderCommandMutation,
+  SalesOrderCommandMutationVariables
+>
+) {
+const options = { ...defaultOptions, ...baseOptions };
+return Apollo.useMutation<
+  SalesOrderCommandMutation,
+  SalesOrderCommandMutationVariables
+>(SalesOrderCommandDocument, options);
+}
+export type SalesOrderCommandMutationHookResult = ReturnType<
+typeof useSalesOrderCommandMutation
+>;
+export type SalesOrderCommandMutationResult =
+Apollo.MutationResult<SalesOrderCommandMutation>;
+export type SalesOrderCommandMutationOptions = Apollo.BaseMutationOptions<
+SalesOrderCommandMutation,
+SalesOrderCommandMutationVariables
+>;
+export const GetSalesOrderWithFulfilmentShipmentsDocument = gql`
+query GetSalesOrderWithFulfilmentShipments($salesOrderId: uuid!) {
+  salesOrder: sales_orders_by_pk(id: $salesOrderId) {
+    ...SalesOrderWithShipments
+  }
+}
+${SalesOrderWithShipmentsFragmentDoc}
+`;
+
+/**
+* __useGetSalesOrderWithFulfilmentShipmentsQuery__
+*
+* To run a query within a React component, call `useGetSalesOrderWithFulfilmentShipmentsQuery` and pass it any options that fit your needs.
+* When your component renders, `useGetSalesOrderWithFulfilmentShipmentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+* you can use to render your UI.
+*
+* @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+*
+* @example
+* const { data, loading, error } = useGetSalesOrderWithFulfilmentShipmentsQuery({
+*   variables: {
+*      salesOrderId: // value for 'salesOrderId'
+*   },
+* });
+*/
+export function useGetSalesOrderWithFulfilmentShipmentsQuery(
+baseOptions: Apollo.QueryHookOptions<
+  GetSalesOrderWithFulfilmentShipmentsQuery,
+  GetSalesOrderWithFulfilmentShipmentsQueryVariables
+>
+) {
+const options = { ...defaultOptions, ...baseOptions };
+return Apollo.useQuery<
+  GetSalesOrderWithFulfilmentShipmentsQuery,
+  GetSalesOrderWithFulfilmentShipmentsQueryVariables
+>(GetSalesOrderWithFulfilmentShipmentsDocument, options);
+}
