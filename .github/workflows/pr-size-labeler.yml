@@ -1,14 +1,15 @@
 name: pr-size-labeler
 
-on: [pull_request]
+on:
+  pull_request:
+    types:
+      - ready_for_review
+      - opened
 
 jobs:
   labeler:
     runs-on: ubuntu-latest
     name: Label the PR size
-    permissions:
-      issues: write
-      pull-requests: write
     steps:
       - uses: codelytv/pr-size-labeler@v1
         with:
@@ -28,5 +29,16 @@ jobs:
             Please make sure you are NOT addressing multiple issues with one PR.
             Note this PR might be rejected due to its size.
           files_to_ignore: |
-            "web/*"
-          # Files to ignore needs to single quotes ' ' even though docs have double " "
+            '*.lock'
+            'package-lock.json'
+            'seeder/_generated/*'
+            'server/hasura/*'
+            'shopify/generated/*'
+            'web/src/generated/*'
+            'server/actions/src/generated/*'
+            'server/actions/src/gqlSchemas/*'
+            'shared/src/gql/graphql.ts'
+            'shared/src/repos/*'
+            'web/src/graphql/schema/localSchema.json'
+
+# Files to ignore needs to single quotes ' ' even though docs have double " "

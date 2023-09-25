@@ -1,0 +1,31 @@
+version: 1
+labels:
+  - label: "size/xs"
+    size:
+      exclude-files:
+        ["web/src/generated/graphql.ts", "web/src/generated/test/graphql.ts"]
+      below: 10
+  - label: "size/s"
+    size:
+      exclude-files:
+        ["web/src/generated/graphql.ts", "web/src/generated/test/graphql.ts"]
+      above: 9
+      below: 100
+  - label: "size/m"
+    size:
+      exclude-files:
+        ["web/src/generated/graphql.ts", "web/src/generated/test/graphql.ts"]
+      above: 99
+      below: 500
+  - label: "size/l"
+    size:
+      exclude-files:
+        ["web/src/generated/graphql.ts", "web/src/generated/test/graphql.ts"]
+      above: 499
+      below: 1000
+  - label: "size/xl"
+    size:
+      exclude-files:
+        ["web/src/generated/graphql.ts", "web/src/generated/test/graphql.ts"]
+      above: 999
+      below: 100000
